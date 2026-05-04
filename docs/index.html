@@ -3,583 +3,380 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mon Cher · 판매일보</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<title>몬쉘 판매일보 대시보드</title>
 <style>
-/* ═══ 리셋 & 기본 ═══════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:        #faf8f5;
-  --surface:   #ffffff;
-  --brand:     #8b5e3c;
-  --brand-lt:  #c49a72;
-  --brand-pale:#f5ede4;
-  --accent:    #e8a87c;
-  --text-hi:   #2c1a0e;
-  --text-md:   #6b4c35;
-  --text-lo:   #a8896f;
-  --border:    #e8ddd3;
-  --shadow-sm: 0 1px 4px rgba(139,94,60,.08);
-  --shadow-md: 0 4px 20px rgba(139,94,60,.12);
-  --radius:    14px;
-  --radius-sm: 8px;
-}
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background: var(--bg);
-  color: var(--text-hi);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  :root {
+    --primary: #6c63ff;
+    --primary-light: #ede9fe;
+    --urgent: #ef4444;
+    --urgent-light: #fee2e2;
+    --week: #f59e0b;
+    --week-light: #fef3c7;
+    --watch: #10b981;
+    --watch-light: #d1fae5;
+    --bg: #f8f7ff;
+    --card: #ffffff;
+    --text: #1e1b4b;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-/* ═══ 헤더 ══════════════════════════════════════════════════════ */
-.header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 0 32px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: var(--shadow-sm);
-}
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.header-logo .logo-icon {
-  width: 36px;
-  height: 36px;
-  background: var(--brand);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-.header-logo .brand-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2rem;
-  color: var(--brand);
-  letter-spacing: .5px;
-}
-.header-logo .sub-name {
-  font-size: 0.75rem;
-  color: var(--text-lo);
-  margin-top: 1px;
-}
-.header-meta {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.badge-live {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  color: var(--brand);
-  background: var(--brand-pale);
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 600;
-}
-.badge-live::before {
-  content: '';
-  width: 7px; height: 7px;
-  background: #4caf50;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%,100% { opacity:1; } 50% { opacity:.4; }
-}
-.last-updated { font-size: 0.78rem; color: var(--text-lo); }
+  /* Layout */
+  .layout { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
 
-/* ═══ 레이아웃 ══════════════════════════════════════════════════ */
-.layout {
-  display: flex;
-  flex: 1;
-  max-width: 1280px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 28px 24px;
-  gap: 24px;
-  align-items: flex-start;
-}
+  /* Sidebar */
+  .sidebar { background: var(--card); border-right: 1px solid var(--border); padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; }
+  .brand { text-align: center; }
+  .brand h1 { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+  .brand p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
 
-/* ═══ 사이드바 ══════════════════════════════════════════════════ */
-.sidebar {
-  width: 220px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 88px;
-}
-.sidebar-section {
-  background: var(--surface);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-.sidebar-title {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  color: var(--text-lo);
-  text-transform: uppercase;
-  padding: 14px 16px 8px;
-  border-bottom: 1px solid var(--border);
-}
-.date-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 11px 16px;
-  cursor: pointer;
-  transition: background .13s;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.875rem;
-  color: var(--text-md);
-}
-.date-item:last-child { border-bottom: none; }
-.date-item:hover { background: var(--brand-pale); }
-.date-item.active {
-  background: var(--brand);
-  color: #fff;
-  font-weight: 600;
-}
-.date-item .count-badge {
-  font-size: 0.7rem;
-  background: var(--brand-pale);
-  color: var(--brand);
-  padding: 2px 7px;
-  border-radius: 10px;
-  font-weight: 700;
-}
-.date-item.active .count-badge {
-  background: rgba(255,255,255,.25);
-  color: #fff;
-}
+  /* Calendar */
+  .calendar-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .calendar-title { font-weight: 700; font-size: 0.95rem; }
+  .cal-nav { background: none; border: 1px solid var(--border); border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 0.85rem; color: var(--text); }
+  .cal-nav:hover { background: var(--primary-light); }
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal-dow { text-align: center; font-size: 0.65rem; font-weight: 600; color: var(--muted); padding: 4px 0; }
+  .cal-day { text-align: center; padding: 5px 2px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; position: relative; transition: background 0.15s; min-height: 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+  .cal-day:hover { background: var(--primary-light); }
+  .cal-day.has-data::after { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--primary); display: block; }
+  .cal-day.selected { background: var(--primary); color: white; font-weight: 700; }
+  .cal-day.selected::after { background: white; }
+  .cal-day.other-month { color: var(--border); cursor: default; }
+  .cal-day.other-month:hover { background: none; }
+  .cal-day.today { border: 2px solid var(--primary); }
 
-/* ═══ 메인 컨텐츠 ═══════════════════════════════════════════════ */
-.main { flex: 1; min-width: 0; }
+  /* Date list fallback */
+  .date-list { display: flex; flex-direction: column; gap: 4px; max-height: 300px; overflow-y: auto; }
+  .date-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; cursor: pointer; text-align: left; font-size: 0.85rem; transition: all 0.15s; }
+  .date-btn:hover { background: var(--primary-light); border-color: var(--primary); }
+  .date-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .date-btn .post-count { font-size: 0.7rem; opacity: 0.7; float: right; }
 
-/* 상단 날짜 배너 */
-.date-banner {
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-lt) 100%);
-  border-radius: var(--radius);
-  padding: 22px 28px;
-  color: #fff;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: var(--shadow-md);
-}
-.date-banner .date-label {
-  font-size: 0.75rem;
-  opacity: .75;
-  margin-bottom: 4px;
-  letter-spacing: .5px;
-}
-.date-banner .date-value {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
-}
-.date-banner .stats-row {
-  display: flex;
-  gap: 32px;
-}
-.date-banner .stat { text-align: right; }
-.date-banner .stat .s-val {
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1;
-}
-.date-banner .stat .s-lbl {
-  font-size: 0.72rem;
-  opacity: .75;
-  margin-top: 2px;
-}
+  /* Main */
+  .main { padding: 24px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+  .main-header { display: flex; align-items: center; justify-content: space-between; }
+  .main-header h2 { font-size: 1.4rem; font-weight: 700; }
+  .badge-date { background: var(--primary-light); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
 
-/* 검색 바 */
-.search-wrap {
-  position: relative;
-  margin-bottom: 20px;
-}
-.search-icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-lo);
-  font-size: 16px;
-  pointer-events: none;
-}
-.search-input {
-  width: 100%;
-  padding: 12px 16px 12px 42px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 0.9rem;
-  font-family: inherit;
-  background: var(--surface);
-  color: var(--text-hi);
-  outline: none;
-  transition: border-color .15s, box-shadow .15s;
-  box-shadow: var(--shadow-sm);
-}
-.search-input:focus {
-  border-color: var(--brand-lt);
-  box-shadow: 0 0 0 3px rgba(139,94,60,.1);
-}
-.search-input::placeholder { color: var(--text-lo); }
+  /* Cards */
+  .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
+  .card-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 
-/* 게시글 카드 */
-.posts-list { display: flex; flex-direction: column; gap: 14px; }
-.post-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow .15s, transform .15s;
-}
-.post-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
-}
-.post-card-header {
-  display: flex;
-  align-items: center;
-  padding: 16px 20px;
-  background: var(--brand-pale);
-  border-bottom: 1px solid var(--border);
-  gap: 12px;
-}
-.store-avatar {
-  width: 38px;
-  height: 38px;
-  background: var(--brand);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 14px;
-  flex-shrink: 0;
-  font-weight: 700;
-}
-.store-info { flex: 1; }
-.store-name {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--brand);
-}
-.post-time {
-  font-size: 0.75rem;
-  color: var(--text-lo);
-  margin-top: 2px;
-}
-.post-card-body { padding: 18px 20px; }
-.post-content {
-  font-size: 0.875rem;
-  color: var(--text-md);
-  line-height: 1.8;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.post-content.clamped {
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.expand-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 10px;
-  font-size: 0.8rem;
-  color: var(--brand);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: 600;
-  padding: 4px 0;
-  transition: opacity .15s;
-}
-.expand-btn:hover { opacity: .7; }
+  /* Summary */
+  .summary-text { font-size: 1rem; line-height: 1.7; color: var(--text); }
 
-/* 빈 상태 */
-.empty-state {
-  text-align: center;
-  padding: 80px 20px;
-  background: var(--surface);
-  border-radius: var(--radius);
-  border: 1px dashed var(--border);
-}
-.empty-state .empty-icon { font-size: 3rem; margin-bottom: 16px; opacity: .5; }
-.empty-state p { color: var(--text-lo); font-size: 0.9rem; }
+  /* Highlights */
+  .highlights { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .highlight-tag { background: var(--primary-light); color: var(--primary); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; }
 
-/* 로딩 */
-.loading-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-  gap: 16px;
-}
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--border);
-  border-top-color: var(--brand);
-  border-radius: 50%;
-  animation: spin .7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { color: var(--text-lo); font-size: 0.9rem; }
+  /* Tasks */
+  .tasks { display: flex; flex-direction: column; gap: 10px; }
+  .task-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
+  .task-item.p-urgent { border-left: 4px solid var(--urgent); background: var(--urgent-light); }
+  .task-item.p-week { border-left: 4px solid var(--week); background: var(--week-light); }
+  .task-item.p-watch { border-left: 4px solid var(--watch); background: var(--watch-light); }
+  .priority-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+  .p-urgent .priority-badge { background: var(--urgent); color: white; }
+  .p-week .priority-badge { background: var(--week); color: white; }
+  .p-watch .priority-badge { background: var(--watch); color: white; }
+  .task-info { flex: 1; }
+  .task-store { font-size: 0.75rem; color: var(--muted); margin-bottom: 2px; }
+  .task-action { font-size: 0.9rem; line-height: 1.5; }
 
-/* 에러 */
-.error-card {
-  background: #fff8f6;
-  border: 1.5px solid #f5c6b8;
-  border-radius: var(--radius);
-  padding: 24px;
-  color: #b04a2a;
-  font-size: 0.875rem;
-  line-height: 1.7;
-  white-space: pre-line;
-}
-.error-card strong { display: block; margin-bottom: 8px; font-size: 1rem; }
+  /* Store grid */
+  .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .store-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .store-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; color: var(--primary); }
+  .store-summary { font-size: 0.85rem; line-height: 1.5; color: #374151; }
 
-/* ═══ 반응형 ═════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-  .layout { flex-direction: column; padding: 16px; gap: 16px; }
-  .sidebar { width: 100%; position: static; }
-  .date-banner { flex-direction: column; align-items: flex-start; gap: 16px; }
-  .date-banner .stats-row { gap: 20px; }
-  .date-banner .stat { text-align: left; }
-  .header { padding: 0 16px; }
-  .header-logo .brand-name { font-size: 1rem; }
-  .sidebar-section { max-height: 160px; overflow-y: auto; }
-}
+  /* Raw posts */
+  .posts-list { display: flex; flex-direction: column; gap: 12px; }
+  .post-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .post-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg); cursor: pointer; }
+  .post-header:hover { background: var(--primary-light); }
+  .post-store { font-weight: 700; font-size: 0.9rem; }
+  .post-time { font-size: 0.75rem; color: var(--muted); }
+  .post-toggle { font-size: 0.8rem; color: var(--muted); }
+  .post-content { padding: 14px 16px; font-size: 0.875rem; line-height: 1.7; white-space: pre-wrap; display: none; border-top: 1px solid var(--border); }
+  .post-content.open { display: block; }
 
-/* ═══ 스크롤바 ═══════════════════════════════════════════════════ */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--brand-lt); }
+  /* Loading / empty */
+  .loading { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .loading .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .empty { text-align: center; padding: 40px; color: var(--muted); font-size: 0.9rem; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+  }
 </style>
 </head>
 <body>
-
-<!-- ── 헤더 ── -->
-<header class="header">
-  <div class="header-logo">
-    <div class="logo-icon">🍰</div>
-    <div>
-      <div class="brand-name">Mon Cher</div>
-      <div class="sub-name">판매일보 대시보드</div>
-    </div>
-  </div>
-  <div class="header-meta">
-    <div class="badge-live" id="live-badge" style="display:none">자동 수집</div>
-    <div class="last-updated" id="last-updated"></div>
-  </div>
-</header>
-
-<!-- ── 본문 레이아웃 ── -->
 <div class="layout">
-  <!-- 사이드바 -->
-  <aside class="sidebar" id="sidebar" style="display:none">
-    <div class="sidebar-section">
-      <div class="sidebar-title">날짜 선택</div>
-      <div id="date-list"></div>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>🍫 몬쉘</h1>
+      <p>판매일보 대시보드</p>
+    </div>
+
+    <!-- Calendar -->
+    <div>
+      <div class="calendar-header">
+        <button class="cal-nav" id="prevMonth">‹</button>
+        <span class="calendar-title" id="calMonthTitle"></span>
+        <button class="cal-nav" id="nextMonth">›</button>
+      </div>
+      <div class="calendar-grid" id="calDows">
+        <div class="cal-dow">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div>
+        <div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
+      </div>
+      <div class="calendar-grid" id="calGrid"></div>
+    </div>
+
+    <!-- Recent dates list -->
+    <div>
+      <div class="card-title">📅 최근 날짜</div>
+      <div class="date-list" id="dateList"></div>
     </div>
   </aside>
 
-  <!-- 메인 -->
-  <main class="main" id="main">
-    <div class="loading-screen" id="loading">
-      <div class="spinner"></div>
-      <div class="loading-text">판매일보 불러오는 중...</div>
+  <!-- Main content -->
+  <main class="main">
+    <div class="main-header">
+      <h2 id="mainTitle">날짜를 선택하세요</h2>
+      <span class="badge-date" id="badgeDate" style="display:none"></span>
     </div>
-    <div id="content" style="display:none">
-      <div class="date-banner" id="date-banner"></div>
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input class="search-input" type="text" id="search" placeholder="매장명 또는 내용으로 검색...">
+
+    <div id="contentArea">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>데이터 로드 중...</p>
       </div>
-      <div class="posts-list" id="posts-list"></div>
     </div>
-    <div class="error-card" id="error" style="display:none"></div>
   </main>
 </div>
 
 <script>
-// GitHub Pages에서 data/posts.json 상대 경로로 로드
-const DATA_URL = "https://raw.githubusercontent.com/yoojeuck/moncher-sales-report/main/data/posts.json";
+const POSTS_URL   = "https://raw.githubusercontent.com/yoojeuck/moncher-sales-report/main/data/posts.json";
+const SUMMARY_URL = "https://raw.githubusercontent.com/yoojeuck/moncher-sales-report/main/data/summaries.json";
 
-let allData   = {};
-let curDate   = "";
-let query     = "";
+let allPosts = {}, allSummaries = {}, availableDates = [];
+let calYear, calMonth, selectedDate = null;
 
 // ── 데이터 로드 ──────────────────────────────────────────────────
 async function loadData() {
   try {
-    const res = await fetch(DATA_URL + "?_=" + Date.now());
-    if (!res.ok) throw new Error("데이터를 불러올 수 없습니다 (HTTP " + res.status + ").\n\nGitHub Actions가 아직 실행되지 않았거나,\nGitHub Pages 설정이 필요할 수 있습니다.\n\nSETUP.md 가이드를 확인해 주세요.");
-    allData = await res.json();
-
-    const dates = Object.keys(allData).sort().reverse();
-    if (!dates.length) throw new Error("수집된 데이터가 아직 없습니다.");
-
-    curDate = dates[0];
-    renderSidebar(dates);
-    renderBanner();
-    renderPosts();
-
-    document.getElementById("last-updated").textContent =
-      "최근: " + dates[0];
-    document.getElementById("live-badge").style.display = "flex";
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("sidebar").style.display = "block";
-    document.getElementById("content").style.display = "block";
+    const [postsRes, sumRes] = await Promise.all([
+      fetch(POSTS_URL + "?t=" + Date.now()),
+      fetch(SUMMARY_URL + "?t=" + Date.now())
+    ]);
+    allPosts     = postsRes.ok     ? await postsRes.json()  : {};
+    allSummaries = sumRes.ok       ? await sumRes.json()    : {};
   } catch(e) {
-    document.getElementById("loading").style.display = "none";
-    const el = document.getElementById("error");
-    el.innerHTML = "<strong>⚠ 데이터 로드 실패</strong>" + esc(e.message);
-    el.style.display = "block";
-  }
-}
-
-// ── 사이드바 날짜 목록 ───────────────────────────────────────────
-function renderSidebar(dates) {
-  document.getElementById("date-list").innerHTML = dates.map(d => {
-    const cnt = (allData[d] || []).length;
-    const active = d === curDate ? " active" : "";
-    return `<div class="date-item${active}" data-date="${d}">
-      <span>${formatDate(d)}</span>
-      <span class="count-badge">${cnt}</span>
-    </div>`;
-  }).join("");
-
-  document.getElementById("date-list").querySelectorAll(".date-item").forEach(el => {
-    el.addEventListener("click", () => {
-      curDate = el.dataset.date;
-      document.querySelectorAll(".date-item").forEach(e => e.classList.remove("active"));
-      el.classList.add("active");
-      query = "";
-      document.getElementById("search").value = "";
-      renderBanner();
-      renderPosts();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  });
-}
-
-// ── 날짜 배너 ────────────────────────────────────────────────────
-function renderBanner() {
-  const posts = allData[curDate] || [];
-  const stores = new Set(posts.map(p => p.store)).size;
-  document.getElementById("date-banner").innerHTML = `
-    <div>
-      <div class="date-label">📅 판매일보</div>
-      <div class="date-value">${formatDate(curDate)}</div>
-    </div>
-    <div class="stats-row">
-      <div class="stat">
-        <div class="s-val">${posts.length}</div>
-        <div class="s-lbl">총 게시글</div>
-      </div>
-      <div class="stat">
-        <div class="s-val">${stores}</div>
-        <div class="s-lbl">매장 수</div>
-      </div>
-    </div>`;
-}
-
-// ── 게시글 목록 ──────────────────────────────────────────────────
-function renderPosts() {
-  const posts = (allData[curDate] || []).filter(p => {
-    if (!query) return true;
-    const q = query.toLowerCase();
-    return p.store.toLowerCase().includes(q) || p.content.toLowerCase().includes(q);
-  });
-
-  const list = document.getElementById("posts-list");
-  if (!posts.length) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">🔍</div>
-        <p>${query ? '"' + esc(query) + '" 검색 결과가 없습니다.' : '이 날짜에 등록된 게시글이 없습니다.'}</p>
-      </div>`;
-    return;
+    allPosts = {}; allSummaries = {};
   }
 
-  list.innerHTML = posts.map((p, i) => {
-    const time   = p.createdAt ? p.createdAt.substring(11, 16) : "";
-    const initials = p.store.replace(/[^가-힣A-Za-z]/g, "").substring(0, 2) || "🏪";
-    const long   = p.content.length > 300;
-    return `
-      <div class="post-card">
-        <div class="post-card-header">
-          <div class="store-avatar">${initials}</div>
-          <div class="store-info">
-            <div class="store-name">${esc(p.store)}</div>
-            <div class="post-time">${time} 작성</div>
-          </div>
-        </div>
-        <div class="post-card-body">
-          <div class="post-content${long ? " clamped" : ""}" id="pc${i}">${esc(p.content)}</div>
-          ${long ? `<button class="expand-btn" id="pb${i}" onclick="toggleExpand(${i})">▼ 전체 보기</button>` : ""}
-        </div>
-      </div>`;
-  }).join("");
-}
+  availableDates = Object.keys(allPosts).sort().reverse();
 
-function toggleExpand(i) {
-  const c = document.getElementById("pc" + i);
-  const b = document.getElementById("pb" + i);
-  if (c.classList.contains("clamped")) {
-    c.classList.remove("clamped");
-    b.textContent = "▲ 접기";
+  renderDateList();
+  renderCalendar();
+
+  if (availableDates.length > 0) {
+    selectDate(availableDates[0]);
   } else {
-    c.classList.add("clamped");
-    b.textContent = "▼ 전체 보기";
+    document.getElementById("contentArea").innerHTML =
+      '<div class="empty">📭 아직 수집된 데이터가 없습니다.<br>GitHub Actions를 실행해 주세요.</div>';
   }
 }
 
-// ── 유틸 ─────────────────────────────────────────────────────────
-function esc(s) {
+// ── 날짜 목록 ────────────────────────────────────────────────────
+function renderDateList() {
+  const list = document.getElementById("dateList");
+  const recent = availableDates.slice(0, 10);
+  if (recent.length === 0) { list.innerHTML = '<div class="empty">데이터 없음</div>'; return; }
+  list.innerHTML = recent.map(d => {
+    const cnt = (allPosts[d] || []).length;
+    return `<button class="date-btn" data-date="${d}" onclick="selectDate('${d}')">
+      ${d} <span class="post-count">${cnt}건</span>
+    </button>`;
+  }).join("");
+}
+
+// ── 캘린더 ───────────────────────────────────────────────────────
+function initCalendar() {
+  const now = new Date();
+  calYear  = now.getFullYear();
+  calMonth = now.getMonth();
+}
+
+function renderCalendar() {
+  const title = document.getElementById("calMonthTitle");
+  title.textContent = `${calYear}년 ${calMonth + 1}월`;
+
+  const grid = document.getElementById("calGrid");
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date().toISOString().slice(0, 10);
+
+  let html = "";
+  // Padding before first day
+  for (let i = 0; i < firstDay; i++) {
+    html += `<div class="cal-day other-month"></div>`;
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hasData = availableDates.includes(dateStr);
+    const isSel   = dateStr === selectedDate;
+    const isToday = dateStr === today;
+    html += `<div class="cal-day ${hasData?'has-data':''} ${isSel?'selected':''} ${isToday?'today':''}"
+      ${hasData ? `onclick="selectDate('${dateStr}')" title="${(allPosts[dateStr]||[]).length}건"` : ''}
+    >${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+document.getElementById("prevMonth").onclick = () => {
+  calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+};
+document.getElementById("nextMonth").onclick = () => {
+  calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+};
+
+// ── 날짜 선택 ────────────────────────────────────────────────────
+function selectDate(date) {
+  selectedDate = date;
+
+  // Update UI states
+  document.querySelectorAll(".date-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.date === date);
+  });
+
+  // Sync calendar to selected month
+  const [y, m] = date.split("-").map(Number);
+  calYear = y; calMonth = m - 1;
+  renderCalendar();
+
+  // Update header
+  document.getElementById("mainTitle").textContent = `${date} 판매일보`;
+  const badge = document.getElementById("badgeDate");
+  badge.style.display = "";
+  badge.textContent = `${(allPosts[date]||[]).length}개 매장`;
+
+  renderContent(date);
+}
+
+// ── 콘텐츠 렌더링 ────────────────────────────────────────────────
+function renderContent(date) {
+  const posts   = allPosts[date]    || [];
+  const summary = allSummaries[date] || null;
+  let html = "";
+
+  // AI 요약 섹션
+  if (summary) {
+    html += `<div class="card">
+      <div class="card-title">🤖 AI 종합 요약</div>
+      <div class="summary-text">${escHtml(summary.overall_summary || "")}</div>`;
+
+    if (summary.highlights && summary.highlights.length > 0) {
+      html += `<div class="highlights">`;
+      summary.highlights.forEach(h => {
+        html += `<span class="highlight-tag">💡 ${escHtml(h)}</span>`;
+      });
+      html += `</div>`;
+    }
+    html += `</div>`;
+
+    // 업무 과제
+    if (summary.tasks && summary.tasks.length > 0) {
+      html += `<div class="card">
+        <div class="card-title">⚡ 업무 과제</div>
+        <div class="tasks">`;
+      summary.tasks.forEach(t => {
+        const cls = t.priority === "즉시처리" ? "p-urgent"
+                  : t.priority === "이번주"   ? "p-week"
+                  : "p-watch";
+        html += `<div class="task-item ${cls}">
+          <span class="priority-badge">${escHtml(t.priority||"")}</span>
+          <div class="task-info">
+            <div class="task-store">📍 ${escHtml(t.store||"")}</div>
+            <div class="task-action">${escHtml(t.action||"")}</div>
+          </div>
+        </div>`;
+      });
+      html += `</div></div>`;
+    }
+
+    // 매장별 요약
+    if (summary.store_summaries && Object.keys(summary.store_summaries).length > 0) {
+      html += `<div class="card">
+        <div class="card-title">🏪 매장별 요약</div>
+        <div class="store-grid">`;
+      for (const [store, text] of Object.entries(summary.store_summaries)) {
+        html += `<div class="store-card">
+          <div class="store-name">${escHtml(store)}</div>
+          <div class="store-summary">${escHtml(text)}</div>
+        </div>`;
+      }
+      html += `</div></div>`;
+    }
+  } else {
+    html += `<div class="card">
+      <div class="card-title">🤖 AI 요약</div>
+      <div class="empty">이 날짜의 AI 요약이 아직 없습니다.<br>스크래퍼 실행 시 자동으로 생성됩니다.</div>
+    </div>`;
+  }
+
+  // 원문 게시글
+  if (posts.length > 0) {
+    html += `<div class="card">
+      <div class="card-title">📋 원문 판매일보 (${posts.length}건)</div>
+      <div class="posts-list">`;
+    posts.forEach((p, i) => {
+      const time = p.createdAt ? p.createdAt.replace("T", " ").slice(0,16) : "";
+      html += `<div class="post-card">
+        <div class="post-header" onclick="togglePost(${i})">
+          <span class="post-store">🏪 ${escHtml(p.store||"(이름없음)")}</span>
+          <span class="post-time">${time}</span>
+          <span class="post-toggle" id="tog-${i}">▼</span>
+        </div>
+        <div class="post-content" id="pc-${i}">${escHtml(p.content||"(내용없음)")}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  } else {
+    html += `<div class="card"><div class="empty">이 날짜에 게시글이 없습니다.</div></div>`;
+  }
+
+  document.getElementById("contentArea").innerHTML = html;
+}
+
+function togglePost(i) {
+  const el  = document.getElementById("pc-" + i);
+  const tog = document.getElementById("tog-" + i);
+  if (el.classList.toggle("open")) {
+    tog.textContent = "▲";
+  } else {
+    tog.textContent = "▼";
+  }
+}
+
+function escHtml(s) {
   return String(s)
-    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;")
+    .replace(/\n/g,"<br>");
 }
 
-function formatDate(d) {
-  // "2026-05-04" → "2026년 5월 4일 (월)"
-  const dt = new Date(d + "T00:00:00");
-  const days = ["일","월","화","수","목","금","토"];
-  return `${dt.getFullYear()}년 ${dt.getMonth()+1}월 ${dt.getDate()}일 (${days[dt.getDay()]})`;
-}
-
-document.getElementById("search").addEventListener("input", e => {
-  query = e.target.value;
-  renderPosts();
-});
-
+// ── 초기화 ───────────────────────────────────────────────────────
+initCalendar();
 loadData();
 </script>
 </body>
