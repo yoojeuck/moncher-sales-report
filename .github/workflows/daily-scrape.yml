@@ -2,6 +2,7 @@ name: 판매일보 자동 수집
 
 on:
   schedule:
+    # 매일 오전 7시 KST = UTC 22:00 (전날)
     - cron: "0 22 * * *"
   workflow_dispatch:
     inputs:
@@ -9,6 +10,10 @@ on:
         description: "수집할 날짜 (YYYY-MM-DD, 비우면 오늘)"
         required: false
         default: ""
+      collect_all:
+        description: "전체 기간 수집 여부 (true 입력 시 전체 수집)"
+        required: false
+        default: "false"
 
 permissions:
   contents: write
@@ -36,18 +41,23 @@ jobs:
           DAOU_PW: ${{ secrets.DAOU_PW }}
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          DATE="${{ github.event.inputs.target_date }}"
-          if [ -z "$DATE" ]; then
-            python scraper/scrape.py
+          if [ "${{ github.event.inputs.collect_all }}" = "true" ]; then
+            python scraper/scrape.py --all
           else
-            python scraper/scrape.py "$DATE"
+            DATE="${{ github.event.inputs.target_date }}"
+            if [ -z "$DATE" ]; then
+              python scraper/scrape.py
+            else
+              python scraper/scrape.py "$DATE"
+            fi
           fi
 
       - name: 데이터 파일 커밋
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/posts.json
+          git add data/posts.json data/summaries.json
           git diff --cached --quiet || git commit -m "📊 판매일보 자동 수집 $(date '+%Y-%m-%d')"
           git push
