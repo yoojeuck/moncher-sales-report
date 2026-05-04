@@ -1,6 +1,7 @@
 """
-몬쉘 판매일보 스크래퍼 v2
-- 특정 날짜 또는 전체 기간 게시글 수집
+몬쉘 판매일보 스크래퍼 v3
+- 단일 날짜 / 기간(--from --to) / 전체(--all) 수집
+- 기본: 어제 날짜 수집 (매일 오전 7시 KST 실행 → 전날 게시글)
 - Gemini AI 요약 + 업무 과제 생성
 - Google Sheets 업데이트 (원문 + 요약 시트)
 """
@@ -48,7 +49,6 @@ def login() -> requests.Session:
 
 # ── 2. 게시글 내용 처리 ──────────────────────────────────────────
 def strip_html(text: str) -> str:
-    """HTML 태그 제거 및 줄바꿈 정리"""
     text = re.sub(r'<br\s*/?>', '\n', text, flags=re.IGNORECASE)
     text = re.sub(r'<p\s*/?>', '\n', text, flags=re.IGNORECASE)
     text = re.sub(r'</p>', '', text, flags=re.IGNORECASE)
@@ -62,7 +62,6 @@ def strip_html(text: str) -> str:
 
 
 def fetch_post_full_content(session: requests.Session, post_id: str) -> str | None:
-    """개별 게시글 전체 내용 시도 (여러 엔드포인트)"""
     endpoints = [
         f"{BASE_URL}/gw/api/board/{BOARD_ID}/posts/{post_id}",
         f"{BASE_URL}/gw/api/v1/board/{BOARD_ID}/post/{post_id}",
@@ -83,14 +82,12 @@ def fetch_post_full_content(session: requests.Session, post_id: str) -> str | No
 
 
 def parse_post(post: dict, session: requests.Session, try_full: bool = True) -> dict:
-    """API 응답 -> 정규화된 dict"""
     created = post.get("createdAt", "")
     post_date = created[:10] if created else ""
     post_id = str(post.get("id", ""))
 
     content = strip_html(post.get("summary", "").strip())
 
-    # 전체 내용 시도 (더 길면 교체)
     if try_full and post_id:
         full = fetch_post_full_content(session, post_id)
         if full and len(full) > len(content):
@@ -132,9 +129,41 @@ def fetch_posts_for_date(session: requests.Session, target_date: str) -> list[di
     return result
 
 
-# ── 4. 전체 기간 수집 (최초 1회) ────────────────────────────────
+# ── 4. 기간 수집 ─────────────────────────────────────────────────
+def fetch_posts_for_range(session: requests.Session, from_date: str, to_date: str) -> dict:
+    """from_date ~ to_date 기간의 게시글 수집 (AI 요약 포함)"""
+    print(f"[>] 기간 수집: {from_date} ~ {to_date}")
+    start = datetime.strptime(from_date, "%Y-%m-%d")
+    end   = datetime.strptime(to_date,   "%Y-%m-%d")
+
+    if start > end:
+        print("[!] 시작일이 종료일보다 큽니다.")
+        return {}
+
+    all_data = {}
+    current = start
+    while current <= end:
+        date_str = current.strftime("%Y-%m-%d")
+        posts = fetch_posts_for_date(session, date_str)
+        if posts:
+            print(f"[✓] {date_str}: {len(posts)}건")
+            save_posts({date_str: posts})
+            summary = generate_summary(posts, date_str)
+            save_summary(date_str, summary)
+            update_google_sheets(posts, summary, date_str)
+            all_data[date_str] = posts
+        else:
+            print(f"[−] {date_str}: 게시글 없음")
+        current += timedelta(days=1)
+        time.sleep(0.5)  # API 부하 방지
+
+    print(f"[✓] 기간 수집 완료: {len(all_data)}일치 데이터")
+    return all_data
+
+
+# ── 5. 전체 기간 수집 (최초 1회) ────────────────────────────────
 def fetch_all_posts(session: requests.Session) -> dict:
-    print("[>] 전체 기간 게시글 수집 시작 (시간이 걸릴 수 있습니다)...")
+    print("[>] 전체 기간 게시글 수집 시작...")
     all_data: dict[str, list] = {}
     page = 0
     total = 0
@@ -147,7 +176,6 @@ def fetch_all_posts(session: requests.Session) -> dict:
         if not posts_raw:
             break
         for post in posts_raw:
-            # 전체 수집 시엔 개별 API 호출 생략 (속도 우선)
             parsed = parse_post(post, session, try_full=False)
             d = parsed["date"]
             if d:
@@ -162,7 +190,7 @@ def fetch_all_posts(session: requests.Session) -> dict:
     return all_data
 
 
-# ── 5. Gemini AI 요약 ────────────────────────────────────────────
+# ── 6. Gemini AI 요약 ────────────────────────────────────────────
 def generate_summary(posts: list[dict], target_date: str) -> dict:
     if not GEMINI_API_KEY:
         print("[!] GEMINI_API_KEY 미설정 — 요약 건너뜁니다.")
@@ -215,7 +243,7 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
         return {}
 
 
-# ── 6. 저장 ─────────────────────────────────────────────────────
+# ── 7. 저장 ─────────────────────────────────────────────────────
 def save_posts(posts_by_date: dict):
     os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
     existing = {}
@@ -242,7 +270,7 @@ def save_summary(target_date: str, summary: dict):
     print(f"[✓] summaries.json 저장 완료")
 
 
-# ── 7. Google Sheets ─────────────────────────────────────────────
+# ── 8. Google Sheets ─────────────────────────────────────────────
 def update_google_sheets(posts: list[dict], summary: dict, target_date: str):
     creds_json     = os.environ.get("GOOGLE_CREDENTIALS_JSON")
     spreadsheet_id = os.environ.get("SPREADSHEET_ID")
@@ -265,7 +293,7 @@ def update_google_sheets(posts: list[dict], summary: dict, target_date: str):
     ss = gc.open_by_key(spreadsheet_id)
     existing_titles = [ws.title for ws in ss.worksheets()]
 
-    # 원문 시트 (가장 왼쪽)
+    # 원문 시트
     if target_date in existing_titles:
         ss.del_worksheet(ss.worksheet(target_date))
     ws = ss.add_worksheet(title=target_date, rows=300, cols=10, index=0)
@@ -274,9 +302,9 @@ def update_google_sheets(posts: list[dict], summary: dict, target_date: str):
         rows.append([p["createdAt"], p["store"], p["content"], p["id"]])
     ws.update("A1", rows)
     ws.format("A1:D1", {"textFormat": {"bold": True}})
-    print(f"[✓] Google Sheets 원문 시트 생성: {target_date}")
+    print(f"[✓] Google Sheets 원문 시트: {target_date}")
 
-    # 요약 시트 (두 번째)
+    # 요약 시트
     if summary:
         summary_title = f"{target_date}_요약"
         if summary_title in existing_titles:
@@ -296,7 +324,7 @@ def update_google_sheets(posts: list[dict], summary: dict, target_date: str):
             s_rows.append([store, text])
         ws2.update("A1", s_rows)
         ws2.format("A1:B1", {"textFormat": {"bold": True}})
-        print(f"[✓] Google Sheets 요약 시트 생성: {summary_title}")
+        print(f"[✓] Google Sheets 요약 시트: {summary_title}")
 
 
 # ── 메인 ─────────────────────────────────────────────────────────
@@ -305,16 +333,29 @@ if __name__ == "__main__":
     session = login()
 
     if "--all" in args:
-        # 전체 기간 수집 모드 (최초 1회)
+        # 전체 기간 수집 (최초 1회용 — 데이터만, AI 요약 없음)
         all_data = fetch_all_posts(session)
         save_posts(all_data)
         print("[!] 전체 수집 완료. AI 요약은 일별 실행 시 생성됩니다.")
 
+    elif "--from" in args:
+        # 기간 수집: --from YYYY-MM-DD --to YYYY-MM-DD
+        from_idx = args.index("--from")
+        from_date = args[from_idx + 1]
+        to_date = datetime.now(KST).strftime("%Y-%m-%d")  # 기본: 오늘
+        if "--to" in args:
+            to_idx = args.index("--to")
+            if to_idx + 1 < len(args) and args[to_idx + 1]:
+                to_date = args[to_idx + 1]
+        fetch_posts_for_range(session, from_date, to_date)
+
     else:
-        # 특정 날짜 (또는 오늘) 수집
+        # 단일 날짜 수집
         target = next((a for a in args if not a.startswith("--")), None)
         if target is None:
-            target = datetime.now(KST).strftime("%Y-%m-%d")
+            # ★ 기본값: 어제 날짜 (오전 7시 자동실행 → 전날 게시글 수집)
+            target = (datetime.now(KST) - timedelta(days=1)).strftime("%Y-%m-%d")
+            print(f"[i] 날짜 미지정 → 어제({target}) 게시글 수집")
 
         posts = fetch_posts_for_date(session, target)
         if not posts:
