@@ -7,11 +7,19 @@ on:
   workflow_dispatch:
     inputs:
       target_date:
-        description: "수집할 날짜 (YYYY-MM-DD, 비우면 오늘)"
+        description: "단일 날짜 (YYYY-MM-DD, 비우면 어제)"
+        required: false
+        default: ""
+      date_from:
+        description: "기간 시작일 (YYYY-MM-DD) — date_to와 함께 사용"
+        required: false
+        default: ""
+      date_to:
+        description: "기간 종료일 (YYYY-MM-DD, 비우면 오늘)"
         required: false
         default: ""
       collect_all:
-        description: "전체 기간 수집 여부 (true 입력 시 전체 수집)"
+        description: "전체 기간 수집 (true 입력 시 — 시간 오래 걸림)"
         required: false
         default: "false"
 
@@ -44,14 +52,26 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           if [ "${{ github.event.inputs.collect_all }}" = "true" ]; then
+            # 전체 수집 (데이터만, AI 요약 없음)
             python scraper/scrape.py --all
-          else
-            DATE="${{ github.event.inputs.target_date }}"
-            if [ -z "$DATE" ]; then
-              python scraper/scrape.py
+
+          elif [ -n "${{ github.event.inputs.date_from }}" ]; then
+            # 기간 수집
+            FROM="${{ github.event.inputs.date_from }}"
+            TO="${{ github.event.inputs.date_to }}"
+            if [ -z "$TO" ]; then
+              python scraper/scrape.py --from "$FROM"
             else
-              python scraper/scrape.py "$DATE"
+              python scraper/scrape.py --from "$FROM" --to "$TO"
             fi
+
+          elif [ -n "${{ github.event.inputs.target_date }}" ]; then
+            # 단일 날짜 수집
+            python scraper/scrape.py "${{ github.event.inputs.target_date }}"
+
+          else
+            # 기본: 어제 날짜 수집 (자동 실행 or 날짜 미입력)
+            python scraper/scrape.py
           fi
 
       - name: 데이터 파일 커밋
