@@ -155,7 +155,7 @@ def fetch_posts_for_range(session: requests.Session, from_date: str, to_date: st
         else:
             print(f"[−] {date_str}: 게시글 없음")
         current += timedelta(days=1)
-        time.sleep(0.5)  # API 부하 방지
+        time.sleep(0.5)
 
     print(f"[✓] 기간 수집 완료: {len(all_data)}일치 데이터")
     return all_data
@@ -225,7 +225,7 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
 
     try:
         resp = requests.post(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
             headers={"Content-Type": "application/json", "X-goog-api-key": GEMINI_API_KEY},
             json={
                 "contents": [{"parts": [{"text": prompt}]}],
@@ -300,7 +300,7 @@ def update_google_sheets(posts: list[dict], summary: dict, target_date: str):
     rows = [["작성일시", "매장명", "내용", "게시글ID"]]
     for p in posts:
         rows.append([p["createdAt"], p["store"], p["content"], p["id"]])
-    ws.update("A1", rows)
+    ws.update(range_name="A1", values=rows)
     ws.format("A1:D1", {"textFormat": {"bold": True}})
     print(f"[✓] Google Sheets 원문 시트: {target_date}")
 
@@ -322,7 +322,7 @@ def update_google_sheets(posts: list[dict], summary: dict, target_date: str):
         s_rows.append(["🏪 매장별 요약", ""])
         for store, text in summary.get("store_summaries", {}).items():
             s_rows.append([store, text])
-        ws2.update("A1", s_rows)
+        ws2.update(range_name="A1", values=s_rows)
         ws2.format("A1:B1", {"textFormat": {"bold": True}})
         print(f"[✓] Google Sheets 요약 시트: {summary_title}")
 
@@ -369,5 +369,4 @@ if __name__ == "__main__":
         save_summary(target, summary)
 
         update_google_sheets(posts, summary, target)
-
-    print("[✓] 완료!")
+        print(f"[✓] 완료!")
