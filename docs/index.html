@@ -225,7 +225,6 @@ function renderCalendar() {
   const today = new Date().toISOString().slice(0, 10);
 
   let html = "";
-  // Padding before first day
   for (let i = 0; i < firstDay; i++) {
     html += `<div class="cal-day other-month"></div>`;
   }
@@ -254,17 +253,14 @@ document.getElementById("nextMonth").onclick = () => {
 function selectDate(date) {
   selectedDate = date;
 
-  // Update UI states
   document.querySelectorAll(".date-btn").forEach(b => {
     b.classList.toggle("active", b.dataset.date === date);
   });
 
-  // Sync calendar to selected month
   const [y, m] = date.split("-").map(Number);
   calYear = y; calMonth = m - 1;
   renderCalendar();
 
-  // Update header
   document.getElementById("mainTitle").textContent = `${date} 판매일보`;
   const badge = document.getElementById("badgeDate");
   badge.style.display = "";
@@ -279,7 +275,6 @@ function renderContent(date) {
   const summary = allSummaries[date] || null;
   let html = "";
 
-  // AI 요약 섹션
   if (summary) {
     html += `<div class="card">
       <div class="card-title">🤖 AI 종합 요약</div>
@@ -294,7 +289,6 @@ function renderContent(date) {
     }
     html += `</div>`;
 
-    // 업무 과제
     if (summary.tasks && summary.tasks.length > 0) {
       html += `<div class="card">
         <div class="card-title">⚡ 업무 과제</div>
@@ -314,7 +308,6 @@ function renderContent(date) {
       html += `</div></div>`;
     }
 
-    // 매장별 요약
     if (summary.store_summaries && Object.keys(summary.store_summaries).length > 0) {
       html += `<div class="card">
         <div class="card-title">🏪 매장별 요약</div>
@@ -334,7 +327,6 @@ function renderContent(date) {
     </div>`;
   }
 
-  // 원문 게시글
   if (posts.length > 0) {
     html += `<div class="card">
       <div class="card-title">📋 원문 판매일보 (${posts.length}건)</div>
@@ -345,9 +337,9 @@ function renderContent(date) {
         <div class="post-header" onclick="togglePost(${i})">
           <span class="post-store">🏪 ${escHtml(p.store||"(이름없음)")}</span>
           <span class="post-time">${time}</span>
-          <span class="post-toggle" id="tog-${i}">▼</span>
+          <span class="post-toggle" id="tog-${i}">▲</span>
         </div>
-        <div class="post-content" id="pc-${i}">${escHtml(p.content||"(내용없음)")}</div>
+        <div class="post-content open" id="pc-${i}">${escHtml(p.content||"(내용없음)")}</div>
       </div>`;
     });
     html += `</div></div>`;
