@@ -2,8 +2,10 @@ name: 판매일보 자동 수집
 
 on:
   schedule:
-    # 매일 오전 7시 KST = UTC 22:00 (전날)
+    # 매일 오전 7시 KST = UTC 22:00 (전날) — 데이터 수집 + AI 요약
     - cron: "0 22 * * *"
+    # 매일 오전 8시 KST = UTC 23:00 — 누락 AI 요약 보충 (한도 초과 시 다음날 이어서)
+    - cron: "0 23 * * *"
   workflow_dispatch:
     inputs:
       target_date:
@@ -63,12 +65,13 @@ jobs:
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
+          # cron 스케줄 구분: 23시 UTC = 누락 요약 보충 자동실행
+          CURRENT_HOUR=$(date -u +%H)
+
           if [ "${{ github.event.inputs.collect_all }}" = "true" ]; then
-            # 전체 수집 (데이터만, AI 요약 없음)
             python scraper/scrape.py --all
 
           elif [ "${{ github.event.inputs.summarize_missing }}" = "true" ]; then
-            # 누락 AI 요약 보충 (한도 내에서 순서대로)
             FROM="${{ github.event.inputs.summarize_from }}"
             TO="${{ github.event.inputs.summarize_to }}"
             if [ -n "$FROM" ] && [ -n "$TO" ]; then
@@ -80,7 +83,6 @@ jobs:
             fi
 
           elif [ -n "${{ github.event.inputs.date_from }}" ]; then
-            # 기간 수집 (원문만, AI 요약 없음)
             FROM="${{ github.event.inputs.date_from }}"
             TO="${{ github.event.inputs.date_to }}"
             if [ -z "$TO" ]; then
@@ -90,11 +92,14 @@ jobs:
             fi
 
           elif [ -n "${{ github.event.inputs.target_date }}" ]; then
-            # 단일 날짜 수집
             python scraper/scrape.py "${{ github.event.inputs.target_date }}"
 
+          elif [ "$CURRENT_HOUR" = "23" ] && [ "${{ github.event_name }}" = "schedule" ]; then
+            # 오전 8시 KST 자동실행 = 누락 요약 보충
+            python scraper/scrape.py --summarize
+
           else
-            # 기본: 어제 날짜 수집 (자동 실행 or 날짜 미입력)
+            # 기본: 어제 날짜 수집 (오전 7시 KST 자동실행 or 수동 날짜 미입력)
             python scraper/scrape.py
           fi
 
