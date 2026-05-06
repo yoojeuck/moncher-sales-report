@@ -22,6 +22,18 @@ on:
         description: "전체 기간 수집 (true 입력 시 — 시간 오래 걸림)"
         required: false
         default: "false"
+      summarize_missing:
+        description: "누락 AI 요약 보충 (true — 요약 없는 날짜를 한도 내에서 순서대로 생성)"
+        required: false
+        default: "false"
+      summarize_from:
+        description: "요약 보충 시작일 (YYYY-MM-DD, summarize_missing=true 일 때)"
+        required: false
+        default: ""
+      summarize_to:
+        description: "요약 보충 종료일 (YYYY-MM-DD, summarize_missing=true 일 때)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -55,8 +67,20 @@ jobs:
             # 전체 수집 (데이터만, AI 요약 없음)
             python scraper/scrape.py --all
 
+          elif [ "${{ github.event.inputs.summarize_missing }}" = "true" ]; then
+            # 누락 AI 요약 보충 (한도 내에서 순서대로)
+            FROM="${{ github.event.inputs.summarize_from }}"
+            TO="${{ github.event.inputs.summarize_to }}"
+            if [ -n "$FROM" ] && [ -n "$TO" ]; then
+              python scraper/scrape.py --summarize --from "$FROM" --to "$TO"
+            elif [ -n "$FROM" ]; then
+              python scraper/scrape.py --summarize --from "$FROM"
+            else
+              python scraper/scrape.py --summarize
+            fi
+
           elif [ -n "${{ github.event.inputs.date_from }}" ]; then
-            # 기간 수집
+            # 기간 수집 (원문만, AI 요약 없음)
             FROM="${{ github.event.inputs.date_from }}"
             TO="${{ github.event.inputs.date_to }}"
             if [ -z "$TO" ]; then
