@@ -2,7 +2,7 @@
 몬쉘 판매일보 스크래퍼 v3
 - 단일 날짜 / 기간(--from --to) / 전체(--all) 수집
 - 기본: 어제 날짜 수집 (매일 오전 7시 KST 실행 → 전날 게시글)
-- Gemini AI 요약 + 업무 과제 생성
+- Gemini AI 요약 + 업무 과제 생성 (단일날짜/기본 실행 시만)
 - Google Sheets 업데이트 (원문 + 요약 시트)
 """
 
@@ -45,6 +45,15 @@ def login() -> requests.Session:
     session.headers["Authorization"] = f"Bearer {token}"
     print("[✓] 로그인 성공")
     return session
+
+
+def relogin(session: requests.Session):
+    """세션 만료 시 기존 session 객체를 재로그인으로 갱신"""
+    print("[!] 세션 만료 (401) — 재로그인 시도...")
+    new_session = login()
+    session.headers.update(new_session.headers)
+    session.cookies.update(new_session.cookies)
+    print("[✓] 세션 갱신 완료")
 
 
 # ── 2. 게시글 내용 처리 ──────────────────────────────────────────
@@ -108,9 +117,16 @@ def fetch_posts_for_date(session: requests.Session, target_date: str) -> list[di
     print(f"[>] {target_date} 게시글 수집 중...")
     result = []
     page = 0
+    session_refreshed = False  # 세션 갱신은 1회만 허용
     while True:
         resp = session.get(f"{BASE_URL}/gw/api/board/{BOARD_ID}/posts",
                            params={"page": page, "size": 30})
+        if resp.status_code == 401 and not session_refreshed:
+            relogin(session)
+            session_refreshed = True
+            page = 0
+            result = []
+            continue
         resp.raise_for_status()
         data = resp.json()
         posts = data.get("data", [])
@@ -131,8 +147,10 @@ def fetch_posts_for_date(session: requests.Session, target_date: str) -> list[di
 
 # ── 4. 기간 수집 ─────────────────────────────────────────────────
 def fetch_posts_for_range(session: requests.Session, from_date: str, to_date: str) -> dict:
-    """from_date ~ to_date 기간의 게시글 수집 (AI 요약 포함)"""
-    print(f"[>] 기간 수집: {from_date} ~ {to_date}")
+    """from_date ~ to_date 기간의 게시글 수집 (원문만 저장, AI 요약 제외)
+    ※ Gemini 무료 티어 일일 토큰 한도 소진 방지를 위해 AI 요약은 건너뜁니다.
+    """
+    print(f"[>] 기간 수집: {from_date} ~ {to_date} (AI 요약 생략)")
     start = datetime.strptime(from_date, "%Y-%m-%d")
     end   = datetime.strptime(to_date,   "%Y-%m-%d")
 
@@ -148,16 +166,14 @@ def fetch_posts_for_range(session: requests.Session, from_date: str, to_date: st
         if posts:
             print(f"[✓] {date_str}: {len(posts)}건")
             save_posts({date_str: posts})
-            summary = generate_summary(posts, date_str)
-            save_summary(date_str, summary)
-            update_google_sheets(posts, summary, date_str)
+            update_google_sheets(posts, {}, date_str)  # summary={} → 요약 시트 생략
             all_data[date_str] = posts
         else:
             print(f"[−] {date_str}: 게시글 없음")
         current += timedelta(days=1)
         time.sleep(0.5)
 
-    print(f"[✓] 기간 수집 완료: {len(all_data)}일치 데이터")
+    print(f"[✓] 기간 수집 완료: {len(all_data)}일치 데이터 (AI 요약은 별도 실행 필요)")
     return all_data
 
 
@@ -355,7 +371,7 @@ if __name__ == "__main__":
         print("[!] 전체 수집 완료. AI 요약은 일별 실행 시 생성됩니다.")
 
     elif "--from" in args:
-        # 기간 수집: --from YYYY-MM-DD --to YYYY-MM-DD
+        # 기간 수집: --from YYYY-MM-DD --to YYYY-MM-DD (AI 요약 없이 원문만)
         from_idx = args.index("--from")
         from_date = args[from_idx + 1]
         to_date = datetime.now(KST).strftime("%Y-%m-%d")  # 기본: 오늘
@@ -365,4 +381,28 @@ if __name__ == "__main__":
                 to_date = args[to_idx + 1]
         fetch_posts_for_range(session, from_date, to_date)
 
-  
+    elif args and not args[0].startswith("--"):
+        # 단일 날짜 수집: python scrape.py YYYY-MM-DD
+        target_date = args[0]
+        posts = fetch_posts_for_date(session, target_date)
+        if posts:
+            save_posts({target_date: posts})
+            summary = generate_summary(posts, target_date)
+            save_summary(target_date, summary)
+            update_google_sheets(posts, summary, target_date)
+            print(f"[✓] {target_date}: {len(posts)}건 수집 완료")
+        else:
+            print(f"[−] {target_date}: 게시글 없음")
+
+    else:
+        # 기본: 어제 날짜 수집 (매일 오전 7시 KST 자동실행)
+        yesterday = (datetime.now(KST) - timedelta(days=1)).strftime("%Y-%m-%d")
+        posts = fetch_posts_for_date(session, yesterday)
+        if posts:
+            save_posts({yesterday: posts})
+            summary = generate_summary(posts, yesterday)
+            save_summary(yesterday, summary)
+            update_google_sheets(posts, summary, yesterday)
+            print(f"[✓] {yesterday}: {len(posts)}건 수집 완료")
+        else:
+            print(f"[−] {yesterday}: 게시글 없음")
