@@ -223,24 +223,40 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
   "highlights": ["주목할 사항1", "주목할 사항2"]
 }}"""
 
-    try:
-        resp = requests.post(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-            headers={"Content-Type": "application/json", "X-goog-api-key": GEMINI_API_KEY},
-            json={
-                "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {"temperature": 0.3, "responseMimeType": "application/json"}
-            },
-            timeout=30
-        )
-        resp.raise_for_status()
-        text = resp.json()["candidates"][0]["content"]["parts"][0]["text"]
-        result = json.loads(text)
-        print("[✓] AI 요약 생성 완료")
-        return result
-    except Exception as e:
-        print(f"[!] AI 요약 실패: {e}")
-        return {}
+    for attempt in range(4):  # 최대 4회 시도
+        try:
+            resp = requests.post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+                headers={"Content-Type": "application/json", "X-goog-api-key": GEMINI_API_KEY},
+                json={
+                    "contents": [{"parts": [{"text": prompt}]}],
+                    "generationConfig": {"temperature": 0.3, "responseMimeType": "application/json"}
+                },
+                timeout=60
+            )
+            if resp.status_code == 429:
+                wait = 30 * (attempt + 1)  # 30초, 60초, 90초, 120초
+                print(f"[!] Rate limit (429) — {wait}초 후 재시도 ({attempt+1}/4)...")
+                time.sleep(wait)
+                continue
+            resp.raise_for_status()
+            text = resp.json()["candidates"][0]["content"]["parts"][0]["text"]
+            result = json.loads(text)
+            print("[✓] AI 요약 생성 완료")
+            return result
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 429:
+                wait = 30 * (attempt + 1)
+                print(f"[!] Rate limit (429) — {wait}초 후 재시도 ({attempt+1}/4)...")
+                time.sleep(wait)
+            else:
+                print(f"[!] AI 요약 실패: {e}")
+                return {}
+        except Exception as e:
+            print(f"[!] AI 요약 실패: {e}")
+            return {}
+    print("[!] AI 요약 실패: 재시도 한도 초과 (rate limit 지속)")
+    return {}
 
 
 # ── 7. 저장 ─────────────────────────────────────────────────────
@@ -349,24 +365,4 @@ if __name__ == "__main__":
                 to_date = args[to_idx + 1]
         fetch_posts_for_range(session, from_date, to_date)
 
-    else:
-        # 단일 날짜 수집
-        target = next((a for a in args if not a.startswith("--")), None)
-        if target is None:
-            # ★ 기본값: 어제 날짜 (오전 7시 자동실행 → 전날 게시글 수집)
-            target = (datetime.now(KST) - timedelta(days=1)).strftime("%Y-%m-%d")
-            print(f"[i] 날짜 미지정 → 어제({target}) 게시글 수집")
-
-        posts = fetch_posts_for_date(session, target)
-        if not posts:
-            print(f"[!] {target} 에 등록된 게시글이 없습니다.")
-            sys.exit(0)
-
-        print(f"[✓] {len(posts)}건 수집 완료")
-        save_posts({target: posts})
-
-        summary = generate_summary(posts, target)
-        save_summary(target, summary)
-
-        update_google_sheets(posts, summary, target)
-        print(f"[✓] 완료!")
+  
