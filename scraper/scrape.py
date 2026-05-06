@@ -359,19 +359,86 @@ def update_google_sheets(posts: list[dict], summary: dict, target_date: str):
         print(f"[✓] Google Sheets 요약 시트: {summary_title}")
 
 
+# ── 9. 누락 요약 보충 ────────────────────────────────────────────
+def summarize_missing(from_date: str = None, to_date: str = None):
+    """posts.json에 있지만 summaries.json에 없는 날짜를 순서대로 AI 요약.
+    일일 토큰 한도 초과(429) 시 그 즉시 종료 — 내일 이어서 실행.
+    from_date/to_date 지정 시 해당 범위만 처리.
+    """
+    if not os.path.exists(DATA_FILE):
+        print("[!] posts.json 없음 — 먼저 데이터 수집을 실행하세요.")
+        return
+
+    with open(DATA_FILE, "r", encoding="utf-8") as f:
+        all_posts = json.load(f)
+
+    existing_summaries = {}
+    if os.path.exists(SUMMARY_FILE):
+        with open(SUMMARY_FILE, "r", encoding="utf-8") as f:
+            existing_summaries = json.load(f)
+
+    # 요약이 없는 날짜 목록 (오래된 날짜 순)
+    missing_dates = sorted([
+        d for d in all_posts
+        if d not in existing_summaries and all_posts[d]
+    ])
+
+    # 날짜 범위 필터
+    if from_date:
+        missing_dates = [d for d in missing_dates if d >= from_date]
+    if to_date:
+        missing_dates = [d for d in missing_dates if d <= to_date]
+
+    if not missing_dates:
+        print("[✓] 모든 날짜의 AI 요약이 이미 존재합니다.")
+        return
+
+    print(f"[>] 요약 미생성 날짜: {len(missing_dates)}일 ({missing_dates[0]} ~ {missing_dates[-1]})")
+    print("[!] 일일 토큰 한도 초과 시 자동 종료 — 내일 이어서 실행됩니다.")
+
+    done = 0
+    for date_str in missing_dates:
+        posts = all_posts[date_str]
+        print(f"[>] {date_str} AI 요약 생성 중... ({len(posts)}건)")
+        summary = generate_summary(posts, date_str)
+        if not summary:
+            # generate_summary가 빈 dict 반환 = 429 한도 초과 또는 오류
+            print(f"[!] {date_str} 요약 실패 — 오늘은 여기까지. 내일 이어서 실행됩니다.")
+            break
+        save_summary(date_str, summary)
+        update_google_sheets(posts, summary, date_str)
+        done += 1
+        time.sleep(2)  # API 부하 방지
+
+    print(f"[✓] 오늘 요약 완료: {done}일 / 남은 미완료: {len(missing_dates) - done}일")
+
+
 # ── 메인 ─────────────────────────────────────────────────────────
 if __name__ == "__main__":
     args = sys.argv[1:]
-    session = login()
 
     if "--all" in args:
         # 전체 기간 수집 (최초 1회용 — 데이터만, AI 요약 없음)
+        session = login()
         all_data = fetch_all_posts(session)
         save_posts(all_data)
-        print("[!] 전체 수집 완료. AI 요약은 일별 실행 시 생성됩니다.")
+        print("[!] 전체 수집 완료. AI 요약은 --summarize 로 별도 실행하세요.")
+
+    elif "--summarize" in args:
+        # 누락 AI 요약 보충 (로그인 불필요 — posts.json 로컬 파일만 사용)
+        from_date = None
+        to_date = None
+        if "--from" in args:
+            from_idx = args.index("--from")
+            from_date = args[from_idx + 1]
+        if "--to" in args:
+            to_idx = args.index("--to")
+            to_date = args[to_idx + 1]
+        summarize_missing(from_date, to_date)
 
     elif "--from" in args:
         # 기간 수집: --from YYYY-MM-DD --to YYYY-MM-DD (AI 요약 없이 원문만)
+        session = login()
         from_idx = args.index("--from")
         from_date = args[from_idx + 1]
         to_date = datetime.now(KST).strftime("%Y-%m-%d")  # 기본: 오늘
@@ -383,6 +450,7 @@ if __name__ == "__main__":
 
     elif args and not args[0].startswith("--"):
         # 단일 날짜 수집: python scrape.py YYYY-MM-DD
+        session = login()
         target_date = args[0]
         posts = fetch_posts_for_date(session, target_date)
         if posts:
@@ -396,6 +464,7 @@ if __name__ == "__main__":
 
     else:
         # 기본: 어제 날짜 수집 (매일 오전 7시 KST 자동실행)
+        session = login()
         yesterday = (datetime.now(KST) - timedelta(days=1)).strftime("%Y-%m-%d")
         posts = fetch_posts_for_date(session, yesterday)
         if posts:
