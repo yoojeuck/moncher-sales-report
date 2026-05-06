@@ -16,7 +16,7 @@ COMPANY_ID     = "5000001396"
 BOARD_ID       = "17422"
 LOGIN_ID       = os.environ.get("DAOU_ID", "juyoo")
 PASSWORD       = os.environ.get("DAOU_PW", "")
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+GROQ_API_KEY  = os.environ.get("GROQ_API_KEY", "")
 KST            = timezone(timedelta(hours=9))
 
 _base        = os.path.join(os.path.dirname(__file__), "..")
@@ -206,10 +206,13 @@ def fetch_all_posts(session: requests.Session) -> dict:
     return all_data
 
 
-# ── 6. Gemini AI 요약 ────────────────────────────────────────────
+# ── 6. Groq AI 요약 ─────────────────────────────────────────────
 def generate_summary(posts: list[dict], target_date: str) -> dict:
-    if not GEMINI_API_KEY:
-        print("[!] GEMINI_API_KEY 미설정 — 요약 건너뜁니다.")
+    """Groq API (Llama 3.3 70B)로 AI 요약 생성.
+    반환값: dict = 성공, {} = 기타오류, None = 일일 한도 소진
+    """
+    if not GROQ_API_KEY:
+        print("[!] GROQ_API_KEY 미설정 — 요약 건너뜁니다.")
         return {}
     if not posts:
         return {}
@@ -239,47 +242,39 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
   "highlights": ["주목할 사항1", "주목할 사항2"]
 }}"""
 
-    for attempt in range(3):  # 최대 3회 시도 (분당 제한 대응)
-        try:
-            resp = requests.post(
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-                headers={"Content-Type": "application/json", "X-goog-api-key": GEMINI_API_KEY},
-                json={
-                    "contents": [{"parts": [{"text": prompt}]}],
-                    "generationConfig": {"temperature": 0.3, "responseMimeType": "application/json"}
-                },
-                timeout=60
-            )
-            if resp.status_code == 429:
-                # 일일 할당량 소진 여부 확인 (재시도해도 소용없음)
-                try:
-                    err_msg = resp.json().get("error", {}).get("message", "").lower()
-                except Exception:
-                    err_msg = ""
-                if "quota" in err_msg or "resource" in err_msg or attempt >= 1:
-                    print(f"[!] Gemini 일일 토큰 한도 소진 — 내일 이어서 실행됩니다.")
-                    return None  # None = 일일 한도 소진 신호
-                # 분당 제한이면 잠시 대기 후 재시도
-                wait = 30 * (attempt + 1)
-                print(f"[!] Rate limit (429) — {wait}초 후 재시도 ({attempt+1}/3)...")
-                time.sleep(wait)
-                continue
-            resp.raise_for_status()
-            text = resp.json()["candidates"][0]["content"]["parts"][0]["text"]
-            result = json.loads(text)
-            print("[✓] AI 요약 생성 완료")
-            return result
-        except requests.exceptions.HTTPError as e:
-            if e.response.status_code == 429:
-                print(f"[!] Gemini 일일 토큰 한도 소진 — 내일 이어서 실행됩니다.")
-                return None
-            print(f"[!] AI 요약 실패: {e}")
-            return {}
-        except Exception as e:
-            print(f"[!] AI 요약 실패: {e}")
-            return {}
-    print("[!] AI 요약 실패: 재시도 한도 초과")
-    return {}
+    try:
+        resp = requests.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+            },
+            json={
+                "model": "llama-3.3-70b-versatile",
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": 0.3,
+                "response_format": {"type": "json_object"},
+            },
+            timeout=60
+        )
+        if resp.status_code == 429:
+            print("[!] Groq 일일 한도 소진 — 내일 이어서 실행됩니다.")
+            return None
+        resp.raise_for_status()
+        text = resp.json()["choices"][0]["message"]["content"]
+        result = json.loads(text)
+        print("[✓] AI 요약 생성 완료")
+        return result
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 429:
+            print("[!] Groq 일일 한도 소진 — 내일 이어서 실행됩니다.")
+            return None
+        print(f"[!] AI 요약 실패: {e}")
+        return {}
+    except Exception as e:
+        print(f"[!] AI 요약 실패: {e}")
+        return {}
+
 
 
 # ── 7. 저장 ─────────────────────────────────────────────────────
