@@ -239,7 +239,7 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
   "highlights": ["주목할 사항1", "주목할 사항2"]
 }}"""
 
-    for attempt in range(4):  # 최대 4회 시도
+    for attempt in range(3):  # 최대 3회 시도 (분당 제한 대응)
         try:
             resp = requests.post(
                 "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
@@ -251,8 +251,17 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
                 timeout=60
             )
             if resp.status_code == 429:
-                wait = 30 * (attempt + 1)  # 30초, 60초, 90초, 120초
-                print(f"[!] Rate limit (429) — {wait}초 후 재시도 ({attempt+1}/4)...")
+                # 일일 할당량 소진 여부 확인 (재시도해도 소용없음)
+                try:
+                    err_msg = resp.json().get("error", {}).get("message", "").lower()
+                except Exception:
+                    err_msg = ""
+                if "quota" in err_msg or "resource" in err_msg or attempt >= 1:
+                    print(f"[!] Gemini 일일 토큰 한도 소진 — 내일 이어서 실행됩니다.")
+                    return None  # None = 일일 한도 소진 신호
+                # 분당 제한이면 잠시 대기 후 재시도
+                wait = 30 * (attempt + 1)
+                print(f"[!] Rate limit (429) — {wait}초 후 재시도 ({attempt+1}/3)...")
                 time.sleep(wait)
                 continue
             resp.raise_for_status()
@@ -262,16 +271,14 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
             return result
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 429:
-                wait = 30 * (attempt + 1)
-                print(f"[!] Rate limit (429) — {wait}초 후 재시도 ({attempt+1}/4)...")
-                time.sleep(wait)
-            else:
-                print(f"[!] AI 요약 실패: {e}")
-                return {}
+                print(f"[!] Gemini 일일 토큰 한도 소진 — 내일 이어서 실행됩니다.")
+                return None
+            print(f"[!] AI 요약 실패: {e}")
+            return {}
         except Exception as e:
             print(f"[!] AI 요약 실패: {e}")
             return {}
-    print("[!] AI 요약 실패: 재시도 한도 초과 (rate limit 지속)")
+    print("[!] AI 요약 실패: 재시도 한도 초과")
     return {}
 
 
@@ -401,10 +408,14 @@ def summarize_missing(from_date: str = None, to_date: str = None):
         posts = all_posts[date_str]
         print(f"[>] {date_str} AI 요약 생성 중... ({len(posts)}건)")
         summary = generate_summary(posts, date_str)
-        if not summary:
-            # generate_summary가 빈 dict 반환 = 429 한도 초과 또는 오류
-            print(f"[!] {date_str} 요약 실패 — 오늘은 여기까지. 내일 이어서 실행됩니다.")
+        if summary is None:
+            # 일일 토큰 한도 소진 — 더 이상 시도 불필요
+            print(f"[!] {date_str} 요약 중단 — 일일 한도 소진. 내일 이어서 실행됩니다.")
             break
+        if not summary:
+            # 기타 오류 — 해당 날짜 건너뛰고 계속
+            print(f"[!] {date_str} 요약 오류 — 건너뛰고 다음 날짜로...")
+            continue
         save_summary(date_str, summary)
         update_google_sheets(posts, summary, date_str)
         done += 1
