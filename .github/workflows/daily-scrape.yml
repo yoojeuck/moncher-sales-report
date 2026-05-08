@@ -2,10 +2,8 @@ name: 판매일보 자동 수집
 
 on:
   schedule:
-    # 매일 오전 7시 KST = UTC 22:00 (전날) — 데이터 수집 + AI 요약
+    # 매일 오전 7시 KST = UTC 22:00
     - cron: "0 22 * * *"
-    # 매일 오전 8시 KST = UTC 23:00 — 누락 AI 요약 보충 (한도 초과 시 다음날 이어서)
-    - cron: "0 23 * * *"
   workflow_dispatch:
     inputs:
       target_date:
@@ -13,7 +11,7 @@ on:
         required: false
         default: ""
       date_from:
-        description: "기간 시작일 (YYYY-MM-DD) — date_to와 함께 사용"
+        description: "기간 시작일 (YYYY-MM-DD)"
         required: false
         default: ""
       date_to:
@@ -21,21 +19,9 @@ on:
         required: false
         default: ""
       collect_all:
-        description: "전체 기간 수집 (true 입력 시 — 시간 오래 걸림)"
+        description: "전체 기간 수집 (true — 시간 오래 걸림)"
         required: false
         default: "false"
-      summarize_missing:
-        description: "누락 AI 요약 보충 (true — 요약 없는 날짜를 한도 내에서 순서대로 생성)"
-        required: false
-        default: "false"
-      summarize_from:
-        description: "요약 보충 시작일 (YYYY-MM-DD, summarize_missing=true 일 때)"
-        required: false
-        default: ""
-      summarize_to:
-        description: "요약 보충 종료일 (YYYY-MM-DD, summarize_missing=true 일 때)"
-        required: false
-        default: ""
 
 permissions:
   contents: write
@@ -65,22 +51,8 @@ jobs:
           SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
-          # cron 스케줄 구분: 23시 UTC = 누락 요약 보충 자동실행
-          CURRENT_HOUR=$(date -u +%H)
-
           if [ "${{ github.event.inputs.collect_all }}" = "true" ]; then
             python scraper/scrape.py --all
-
-          elif [ "${{ github.event.inputs.summarize_missing }}" = "true" ]; then
-            FROM="${{ github.event.inputs.summarize_from }}"
-            TO="${{ github.event.inputs.summarize_to }}"
-            if [ -n "$FROM" ] && [ -n "$TO" ]; then
-              python scraper/scrape.py --summarize --from "$FROM" --to "$TO"
-            elif [ -n "$FROM" ]; then
-              python scraper/scrape.py --summarize --from "$FROM"
-            else
-              python scraper/scrape.py --summarize
-            fi
 
           elif [ -n "${{ github.event.inputs.date_from }}" ]; then
             FROM="${{ github.event.inputs.date_from }}"
@@ -94,12 +66,8 @@ jobs:
           elif [ -n "${{ github.event.inputs.target_date }}" ]; then
             python scraper/scrape.py "${{ github.event.inputs.target_date }}"
 
-          elif [ "$CURRENT_HOUR" = "23" ] && [ "${{ github.event_name }}" = "schedule" ]; then
-            # 오전 8시 KST 자동실행 = 누락 요약 보충
-            python scraper/scrape.py --summarize
-
           else
-            # 기본: 어제 날짜 수집 (오전 7시 KST 자동실행 or 수동 날짜 미입력)
+            # 기본: 어제 날짜 수집 (스케줄 실행 또는 날짜 미입력)
             python scraper/scrape.py
           fi
 
