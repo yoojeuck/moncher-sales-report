@@ -2,8 +2,8 @@ name: 판매일보 자동 수집
 
 on:
   schedule:
-    # 매일 오전 7시 KST = UTC 22:00
-    - cron: "0 22 * * *"
+    # 매일 오전 5시 KST = UTC 20:00
+    - cron: "0 20 * * *"
   workflow_dispatch:
     inputs:
       target_date:
