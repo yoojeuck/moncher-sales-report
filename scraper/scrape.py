@@ -34,10 +34,17 @@ def login() -> requests.Session:
         "Referer": f"{BASE_URL}/login",
         "Origin": BASE_URL,
     })
-    resp = session.post(f"{BASE_URL}/api/portal/public/auth/login", json={
-        "companyId": COMPANY_ID, "loginId": LOGIN_ID,
-        "password": PASSWORD, "captcha": "", "locale": "ko",
-    })
+    # 일시적 서버 오류(400/5xx)에 대비해 최대 3회 재시도
+    for attempt in range(1, 4):
+        resp = session.post(f"{BASE_URL}/api/portal/public/auth/login", json={
+            "companyId": COMPANY_ID, "loginId": LOGIN_ID,
+            "password": PASSWORD, "captcha": "", "locale": "ko",
+        })
+        if resp.status_code == 200:
+            break
+        print(f"[!] 로그인 응답 {resp.status_code} (시도 {attempt}/3) — {resp.text[:120]}")
+        if attempt < 3:
+            time.sleep(15)
     resp.raise_for_status()
     token = session.cookies.get("AccessToken")
     if not token:
