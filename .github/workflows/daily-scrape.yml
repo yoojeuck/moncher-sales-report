@@ -31,10 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 코드 체크아웃
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Python 설정
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: "pip"
@@ -78,3 +78,4 @@ jobs:
           git add data/posts.json data/summaries.json
           git diff --cached --quiet || git commit -m "📊 판매일보 자동 수집 $(date '+%Y-%m-%d')"
           git push
+
