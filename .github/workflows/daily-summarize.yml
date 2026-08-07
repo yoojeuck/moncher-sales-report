@@ -2,8 +2,9 @@ name: 판매일보 AI 요약 보충
 
 on:
   schedule:
-    # 매일 오전 5시 30분 KST = UTC 20:30
-    - cron: "30 20 * * *"
+    # 오전 5시 37분 KST, 예비 7시 37분 KST
+    - cron: "37 20 * * *"
+    - cron: "37 22 * * *"
   workflow_dispatch:
     inputs:
       summarize_from:
