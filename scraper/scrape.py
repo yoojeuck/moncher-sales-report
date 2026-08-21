@@ -17,6 +17,9 @@ BOARD_ID       = "17422"
 LOGIN_ID       = os.environ.get("DAOU_ID", "juyoo")
 PASSWORD       = os.environ.get("DAOU_PW", "")
 GROQ_API_KEY  = os.environ.get("GROQ_API_KEY", "")
+# llama-3.3-70b-versatile 은 2026-08-16 무료·개발자 티어에서 종료됐다.
+# 종료 당일부터 모든 요약이 조용히 실패해 summaries.json 이 8/16 에서 멈췄다.
+GROQ_MODEL    = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
 KST            = timezone(timedelta(hours=9))
 
 _base        = os.path.join(os.path.dirname(__file__), "..")
@@ -215,7 +218,7 @@ def fetch_all_posts(session: requests.Session) -> dict:
 
 # ── 6. Groq AI 요약 ─────────────────────────────────────────────
 def generate_summary(posts: list[dict], target_date: str) -> dict:
-    """Groq API (Llama 3.3 70B)로 AI 요약 생성.
+    """Groq API로 AI 요약 생성.
     반환값: dict = 성공, {} = 기타오류, None = 일일 한도 소진
     """
     if not GROQ_API_KEY:
@@ -257,7 +260,7 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
                 "Authorization": f"Bearer {GROQ_API_KEY}",
             },
             json={
-                "model": "llama-3.3-70b-versatile",
+                "model": GROQ_MODEL,
                 "messages": [{"role": "user", "content": prompt}],
                 "temperature": 0.3,
                 "response_format": {"type": "json_object"},
@@ -406,6 +409,7 @@ def summarize_missing(from_date: str = None, to_date: str = None):
     print("[!] 일일 토큰 한도 초과 시 자동 종료 — 내일 이어서 실행됩니다.")
 
     done = 0
+    failed = 0
     for date_str in missing_dates:
         posts = all_posts[date_str]
         print(f"[>] {date_str} AI 요약 생성 중... ({len(posts)}건)")
@@ -417,13 +421,19 @@ def summarize_missing(from_date: str = None, to_date: str = None):
         if not summary:
             # 기타 오류 — 해당 날짜 건너뛰고 계속
             print(f"[!] {date_str} 요약 오류 — 건너뛰고 다음 날짜로...")
+            failed += 1
             continue
         save_summary(date_str, summary)
         update_google_sheets(posts, summary, date_str)
         done += 1
         time.sleep(2)  # API 부하 방지
 
-    print(f"[✓] 오늘 요약 완료: {done}일 / 남은 미완료: {len(missing_dates) - done}일")
+    print(f"[✓] 오늘 요약 완료: {done}일 / 실패: {failed}일 / 남은 미완료: {len(missing_dates) - done}일")
+    # 한 건도 못 만들고 오류만 났다면 조용한 성공으로 넘기지 않는다. 모델 종료처럼
+    # 계속 실패하는 원인은 워크플로가 빨갛게 떠야 사람이 알아챈다.
+    if done == 0 and failed > 0:
+        print(f"[X] 요약을 한 건도 생성하지 못했습니다 (모델 {GROQ_MODEL} 응답 실패 {failed}일)")
+        sys.exit(1)
 
 
 # ── 메인 ─────────────────────────────────────────────────────────
