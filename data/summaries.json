@@ -4677,53 +4677,43 @@
     ]
   },
   "2026-08-26": {
-    "overall_summary": "Most stores experienced low sales, especially hall cakes, while Hyundai Trade and Cafe Mongshushu maintained steady sales; upcoming Chuseok gift‑set event and a new pop‑up brand are notable.",
+    "overall_summary": "전반적으로 한산한 가운데 매장별 편차가 컸습니다. 현대무역점과 카페 몽슈슈 GFC는 고른 판매와 롤·구움과자 호조를 보인 반면, 신세계센텀점과 AK분당점은 내점·실구매가 크게 줄어 부진했습니다. 이달 말 추석선물세트 행사 준비와 롯데인천점의 마망가또 팝업 입점이 주요 이슈입니다.",
     "store_summaries": {
-      "현대충청점": "Morning sales good but sales dropped after lunch; hall cake moved to 마듀, gift sets to 교동; need to prepare for Chuseok gift‑set event.",
-      "신세계센텀점": "Only slice cake sold, very few customers and purchases.",
-      "현대미아점": "No notable issues reported.",
-      "현대무역점": "Even product sales with strong baked‑goods performance.",
-      "롯데본점": "New sliding‑door furniture distribution caused aesthetic mismatches; our ivory 서립장 was omitted.",
-      "롯데인천점": "All items sold except hall cake; Dutch cheese‑cake factory closed, 마망가또 pop‑up started on 25th.",
-      "카페 몽슈슈_GFC": "Steady customer flow after lunch peak, active roll cake sales.",
-      "AK분당": "Very tough day with poor sales; hall cake handling issues causing damage."
+      "현대충청점": "오전 호조 후 점심 이후 부진, 홀케이크·선물세트 수요가 타 매장으로 쏠림. 월말 추석선물세트 행사 대비 준비 필요.",
+      "신세계센텀점": "조각케이크만 소량 판매, 내점객·실구매 모두 급감한 하루.",
+      "현대미아점": "특이사항 없음.",
+      "현대무역점": "제품이 골고루 판매되고 구움과자 판매 호조.",
+      "롯데본점": "주변 매장에 부자재 수납 가구 배분(미관 개선), 자사 서랍장은 이번 배분에서 제외.",
+      "롯데인천점": "홀케이크 제외 고른 판매. 더치즈케익팩토리 폐점 후 25일부터 마망가또(롤케이크·양갱) 팝업 입점.",
+      "카페 몽슈슈_GFC": "점심 피크 이후에도 고객 방문이 이어져 롤 판매 활발.",
+      "AK분당점": "홀케이크가 외면받고 고객이 인접 매장으로 이탈하는 등 크게 부진, 직원 사기 저하."
     },
     "tasks": [
       {
         "priority": "즉시처리",
+        "store": "AK분당점",
+        "action": "홀케이크 경쟁력·진열/프로모션 대응 방안 점검"
+      },
+      {
+        "priority": "확인",
         "store": "현대충청점",
-        "action": "Prepare Chuseok gift‑set materials and coordinate with 교동 for group orders."
+        "action": "추석선물세트 행사 준비(안내책자·단체주문 대응) 착수"
       },
       {
-        "priority": "이번주",
+        "priority": "확인",
         "store": "신세계센텀점",
-        "action": "Launch promotion for hall cakes to boost sales and attract foot traffic."
+        "action": "내점·실구매 급감 원인 파악"
       },
       {
-        "priority": "모니터링",
-        "store": "AK분당",
-        "action": "Review hall cake handling process and improve packaging to prevent damage."
-      },
-      {
-        "priority": "이번주",
-        "store": "롯데본점",
-        "action": "Re‑evaluate furniture and 서립장 distribution to ensure aesthetic consistency."
-      },
-      {
-        "priority": "모니터링",
+        "priority": "확인",
         "store": "롯데인천점",
-        "action": "Collaborate with 마망가또 pop‑up for cross‑promotion and monitor impact on roll cake sales."
-      },
-      {
-        "priority": "모니터링",
-        "store": "전체",
-        "action": "Track overall hall cake sales trend and adjust inventory accordingly."
+        "action": "마망가또 팝업 입점에 따른 판매 영향 모니터링"
       }
     ],
     "highlights": [
-      "Hall cake sales are low across multiple locations",
-      "Chuseok gift‑set event preparation needed",
-      "New 마망가또 pop‑up brand at 롯데인천점"
+      "추석선물세트 행사 준비",
+      "마망가또 팝업 입점(롯데인천)",
+      "구움과자 판매 호조(현대무역)"
     ]
   }
 }
