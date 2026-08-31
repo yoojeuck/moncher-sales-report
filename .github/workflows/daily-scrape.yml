@@ -2,9 +2,11 @@ name: 판매일보 자동 수집
 
 on:
   schedule:
-    # 오전 5시 07분 KST, 예비 7시 07분 KST
+    # 오전 5시 07분 KST, 예비 7시 07분 · 9시 07분 KST
+    # (2026-09-01: GitHub 예약이 두 번 다 밀려 아침 내내 안 돈 날이 있어 예비를 늘림)
     - cron: "7 20 * * *"
     - cron: "7 22 * * *"
+    - cron: "7 0 * * *"
   workflow_dispatch:
     inputs:
       target_date:
@@ -68,8 +70,11 @@ jobs:
             python scraper/scrape.py "${{ github.event.inputs.target_date }}"
 
           else
-            # 기본: 어제 날짜 수집 (스케줄 실행 또는 날짜 미입력)
-            python scraper/scrape.py
+            # 기본(예약): 그제+어제 이틀 수집 — 예약이 하루 통째로 밀려도 다음 날 스스로 메꾼다.
+            # 같은 날짜 재수집은 날짜 단위 통째 갱신(save_posts 가 dict.update)이라 안전하고,
+            # 단일 날짜 모드라 AI 요약·구글시트까지 기존과 동일하게 만들어진다. (2026-09-01)
+            python scraper/scrape.py "$(TZ=Asia/Seoul date -d '2 days ago' +%Y-%m-%d)"
+            python scraper/scrape.py "$(TZ=Asia/Seoul date -d 'yesterday' +%Y-%m-%d)"
           fi
 
       - name: 데이터 파일 커밋
