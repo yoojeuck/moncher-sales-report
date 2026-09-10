@@ -1,5 +1,6 @@
 """
-몬쉘 판매일보 스크래퍼 v3
+몬쉘 판매일보 스크래퍼 v3.1
+- 판매일보 귀속일: KST 오전 06:00부터 다음 날 06:00 직전까지
 - 단일 날짜 / 기간(--from --to) / 전체(--all) 수집
 - 기본: 어제 날짜 수집 (매일 오전 7시 KST 실행 → 전날 게시글)
 - Gemini AI 요약 + 업무 과제 생성 (단일날짜/기본 실행 시만)
@@ -100,9 +101,19 @@ def fetch_post_full_content(session: requests.Session, post_id: str) -> str | No
     return None
 
 
+def attribution_date(created: str) -> str:
+    """등록 시각은 보존하고, KST 06:00 경계로 판매일보 날짜만 계산한다."""
+    if not created:
+        return ""
+    registered = datetime.fromisoformat(created.replace("Z", "+00:00"))
+    if registered.tzinfo is None:
+        registered = registered.replace(tzinfo=KST)
+    return (registered.astimezone(KST) - timedelta(hours=6)).date().isoformat()
+
+
 def parse_post(post: dict, session: requests.Session, try_full: bool = True) -> dict:
     created = post.get("createdAt", "")
-    post_date = created[:10] if created else ""
+    post_date = attribution_date(created)
     post_id = str(post.get("id", ""))
 
     content = strip_html(post.get("summary", "").strip())
@@ -144,7 +155,7 @@ def fetch_posts_for_date(session: requests.Session, target_date: str) -> list[di
             break
         for post in posts:
             created = post.get("createdAt", "")
-            post_date = created[:10] if created else ""
+            post_date = attribution_date(created)
             if post_date == target_date:
                 result.append(parse_post(post, session, try_full=True))
             elif post_date < target_date:

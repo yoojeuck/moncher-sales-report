@@ -46,6 +46,9 @@ jobs:
       - name: 의존성 설치
         run: pip install -r scraper/requirements.txt
 
+      - name: 판매일보 06시 날짜 경계 시험
+        run: python -m unittest discover -s scraper -p 'test_*.py'
+
       - name: 스크래핑 실행
         env:
           DAOU_ID: ${{ secrets.DAOU_ID }}
