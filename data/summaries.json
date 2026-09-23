@@ -5959,88 +5959,109 @@
     ]
   },
   "2026-09-21": {
-    "overall_summary": "대부분 매장에서 홀케이크 판매가 저조하고 구움과자·롤케이크 수요가 상대적으로 높으며, 추석 전 경쟁업체 증가와 재고·포장 이슈가 눈에 띕니다.",
+    "overall_summary": "Most stores see reduced whole‑cake sales ahead of Chuseok, while baked‑goods remain steady; competition from new pop‑up shops and a packaging issue at one store are notable concerns.",
     "store_summaries": {
-      "신세계경기점": "홀케이크 판매 감소로 손실 발생, 구움과자 판매가 매출을 보전함",
-      "현대판교점": "추석 기대에 못 미치는 매출, 신규 팝업·한정선 등 경쟁 심화",
-      "현대천호": "월요일 매출 저조, 쿠키샌드M 품절",
-      "현대목동점": "구움과자 선호도 높고 롤케이크는 선물용 구매가 주류, 홀케이크 수요 낮음",
-      "현대프리미엄아울렛 스페이스원": "추석 전 조용한 월요일, 전 제품 소량 판매",
-      "신세계대구점": "구움과자·보자기 포장 수요 증가, 롤케이크 수요 상승, 홀케이크 전혀 판매되지 않음",
-      "카페 몽슈슈_엘포트점": "점심·저녁 음료 고객 존재, 컷과 함께 소량 판매, 롤·홀케이크 소량 판매",
-      "현대무역점": "모든 제품이 골고루 판매",
-      "카페 몽슈슈_정자점": "홀케이크 판매 극히 저조, 배달 건수 적음, 내점 음료 고객 소수",
-      "현대미아점": "포장 상자 내부 종이와 유통기한 씰이 뒤바뀐 경우 다수 발생, 재포장 필요",
-      "현대중동점": "특이사항 없음",
-      "신세계센텀점": "명절 전 발주 불확실, 내점객 적지만 구움과자 반응 좋음, 재고 확보 필요",
-      "롯데본점": "구움과자 판매 부진, 홀케이크(딸기) 품절 시 매진 경험 있었으나 현재 판매 저조",
-      "롯데부산본점": "당일 매출 1,047,200원, 조용한 하루지만 도지마홀·쁘띠 판매 양호"
+      "신세계경기점": "Whole‑cake sales down, causing loss; baked‑goods helped revenue.",
+      "현대판교점": "Chuseok sales below expectations, competition from pop‑ups affecting demand.",
+      "현대천호": "Low Monday sales; CookieSandM out of stock.",
+      "현대목동점": "Customers prefer baked‑goods and roll‑cakes as gifts; whole‑cake demand low.",
+      "현대프리미엄아울렛 스페이스원": "Quiet Monday before Chuseok, low sales across all items.",
+      "신세계대구점": "High demand for baked‑goods with gift wrap; roll‑cake up, whole‑cake none.",
+      "카페 몽슈슈_엘포트점": "Few beverage customers, small cake sales; one baked‑goods set sold.",
+      "현대무역점": "All products sold evenly.",
+      "카페 몽슈슈_정자점": "Very low whole‑cake sales, few deliveries, minimal in‑store traffic.",
+      "현대미아점": "Packaging error: inner paper and expiry seal reversed, needs correction.",
+      "현대중동점": "No issues reported.",
+      "신세계센텀점": "Uncertain ordering before holiday; baked‑goods well‑received, low in‑store traffic.",
+      "롯데본점": "Baked‑goods sales low; whole‑cake strawberry out of stock previously boosted sales, now low.",
+      "롯데부산본점": "Sales 1,047,200 KRW; quiet day but steady; Dojima Hall/Petite strong."
     },
     "tasks": [
       {
         "priority": "즉시처리",
         "store": "전체",
-        "action": "홀케이크 프로모션 및 할인 행사 기획으로 매출 회복 시도"
+        "action": "Launch short‑term promotion for whole‑cake sales before Chuseok."
       },
       {
         "priority": "이번주",
         "store": "현대판교점",
-        "action": "신규 팝업·한정선 경쟁 분석 및 차별화 메뉴/마케팅 전략 수립"
+        "action": "Monitor competitor pop‑up activity and adjust marketing."
       },
       {
         "priority": "이번주",
         "store": "현대미아점",
-        "action": "포장 라벨링 프로세스 개선 및 재포장 담당자 교육"
+        "action": "Correct packaging labeling and communicate with supplier."
       },
       {
         "priority": "모니터링",
         "store": "현대천호",
-        "action": "쿠키샌드M 재입고 일정 확인 및 재고 부족 방지"
+        "action": "Reorder CookieSandM to avoid stockout."
+      },
+      {
+        "priority": "모니터링",
+        "store": "신세계센텀점",
+        "action": "Track in‑store traffic and adjust inventory levels for upcoming holiday."
       }
     ],
     "highlights": [
-      "전 매장에서 홀케이크 판매 저조",
-      "추석 전 신규 경쟁업체·팝업 증가로 매출 압박",
-      "현대미아점 포장 라벨링 오류가 빈번히 발생"
+      "Whole‑cake sales consistently low across stores",
+      "New pop‑up competitors affecting Chuseok demand",
+      "Packaging labeling issue at 현대미아점"
     ]
   },
   "2026-09-22": {
-    "overall_summary": "대부분 매장에서 유동인구가 적고 일부 제품(도지마롤, 홀케이크) 판매가 저조하지만 롤케익·구움과자는 일부 매장에서 좋은 반응을 보였습니다. 재고 과잉과 포장·라벨링 이슈가 공통적으로 나타났습니다.",
+    "overall_summary": "대부분 매장은 유동인구 감소와 일부 제품 판매 저조가 눈에 띄며, 롤케익 및 구움과자 판매가 좋은 매장은 일부 존재합니다.",
     "store_summaries": {
-      "신세계대구점": "유동인구 감소와 홀케이크·도지마롤 판매 저조, 내일 재고 소진 기대.",
-      "현대충청점": "전체적으로 골고루 판매됐으며 보자기 포장이 많이 사용됨.",
-      "SSG도곡": "내점 고객은 적었지만 선물용 고객으로 골고루 판매.",
-      "롯데인천점": "도지마롤·후르츠롤 판매 부진, 무화과·요거트·블루롤 인기, 구움과자와 보자기 포장은 양호.",
-      "신세계센텀점": "케이크 재고 과잉으로 손실 우려, 구움과자는 꾸준히 판매, 유동인구 낮음.",
-      "롯데본점": "구움과자 정리 잘됨, 뚜껑 뒤집힘 현상 있었지만 큰 문제 아님, 스티커 부착 개선 필요.",
-      "카페 몽슈슈_정자점": "구움과자 주력, 롤 초반 대량 판매 후 급감, 소방훈련으로 인한 방문객은 음료만 주문.",
-      "AK분당": "내방고객 적고 고가 제품(휘낭시에·아소트M) 판매 저조, 홀케이크도 부진.",
-      "롯데부산본점": "당일 매출 1,495,500원, 롤케익·특수롤컷 판매 강세, 구움과자는 상대적으로 저조.",
-      "신세계의정부": "휘낭시에 4·6개입 판매 양호, 과잉 재고 우려, 내일 M시리즈 위주 판매 목표.",
-      "현대목동점": "선물 구매 고객 비중 높아 아소트세트·롤케익 판매 좋음, 라보카·홀케이크는 저조.",
-      "신세계천안아산점": "휘낭시에 4개입만 소량 판매, 저가 선물세트와 도지마롤이 인기.",
-      "카페 몽슈슈_GFC": "추석 연휴 앞두고 선물세트 판매 주력, 냉장 쇼케이스 확대 계획."
+      "신세계대구점": "유동인구가 적고 홀케익·도지마롤 판매가 저조해 재고 우려.",
+      "현대충청점": "전체적으로 고르게 판매됐으며 포장 주문이 많았습니다.",
+      "SSG 도곡": "내점 고객은 적었지만 선물 고객이 있어 골고루 판매되었습니다.",
+      "롯데 인천점": "예상 매출에 미치지 못하고 도지마롤·후르츠롤 부진, 무화과 요거 블루롤 수요는 높음.",
+      "신세계센텀점": "준비된 케이크가 미판매로 폐기 우려, 구움과자는 꾸준히 판매.",
+      "롯데본점": "구움과자는 정돈돼 파손 적지만 뚜껑 뒤집힘 및 스티커 부착 개선 필요.",
+      "카페 몽슈슈_정자점": "구움과가 주력이며 롤은 초반 대량 판매 후 급감, 화재훈련으로 인한 방문 고객은 음료만 주문.",
+      "AK분당": "내방고객 적고 고가 제품·홀케익 판매 저조, 소량만 휘낭시에·쿠키 판매.",
+      "롯데부산본점": "당일 매출 1,495,500원, 롤케익·특수롤컷 강세, 고객 수는 적지만 내일 바쁠 전망.",
+      "신세계의정부점": "휘낭시에 4·6개입 판매 호조, 준비 과자 과다, 내일 M시리즈 중심 판매 목표.",
+      "현대목동점": "유동인구는 적지만 선물 구매 고객이 대부분이며 아소트세트와 롤케익이 인기.",
+      "신세계천안아산점": "휘낭시에 4개입만 판매, 고가 제품 부진, 저가 선물세트와 도지마롤이 인기.",
+      "카페 몽슈슈_GFC": "추석 연휴 전 선물세트 판매 집중, 명절 후 디저트 발주 확대 계획."
     },
     "tasks": [
       {
         "priority": "즉시처리",
-        "store": "신세계대구점, 신세계센텀점, AK분당, 롯데인천점, 신세계천안아산점",
-        "action": "도지마롤·홀케이크 등 저조 제품 생산량 조절 및 재고 소진 프로모션 진행"
+        "store": "신세계대구점",
+        "action": "도지마롤·홀케익 재고 조정 및 프로모션 진행"
       },
       {
         "priority": "이번주",
-        "store": "전체",
-        "action": "보자기 포장 및 스티커 라벨링 품질 점검, 포장재 재고 최적화"
+        "store": "롯데 인천점",
+        "action": "무화과 요거 블루롤 재고 보강 및 도지마롤 판매 촉진 방안 마련"
       },
       {
         "priority": "모니터링",
-        "store": "롯데부산본점, 현대목동점, 카페 몽슈슈_GFC",
-        "action": "특수롤·선물세트 판매 추세 분석 및 향후 발주량 조정"
+        "store": "전체",
+        "action": "유동인구 감소 추이 파악 및 마케팅 강화"
+      },
+      {
+        "priority": "이번주",
+        "store": "AK분당",
+        "action": "고가 제품 가격·진열 재검토 및 샘플링 이벤트 진행"
+      },
+      {
+        "priority": "즉시처리",
+        "store": "신세계센텀점",
+        "action": "미판매 케이크 폐기 최소화 방안 및 재고 회전 전략 수립"
+      },
+      {
+        "priority": "이번주",
+        "store": "카페 몽슈슈_GFC",
+        "action": "명절 후 디저트 라인 발주 계획 수립"
       }
     ],
     "highlights": [
-      "전반적인 유동인구 감소와 특정 제품 판매 부진",
-      "롤케익·구움과자 등 일부 제품은 매장별로 강세를 보임"
+      "전반적인 유동인구 감소",
+      "롤케익·특수롤 판매 강세",
+      "포장·스티커 품질 관리 필요"
     ]
   }
 }
