@@ -7000,103 +7000,101 @@
     ]
   },
   "2026-10-14": {
-    "overall_summary": "Most locations reported weak roll‑cake sales and overall low foot traffic, while baked‑goods like cookies and other pastries remained steadier. Inventory concerns and store‑specific issues such as hygiene cleanup and stockouts were noted.",
+    "overall_summary": "대부분 매장에서 롤케이크 판매가 부진하고 구움과자·쿠키 판매가 상대적으로 안정적인 상황이며, 일부 매장은 재고·공사·위생 이슈가 관찰됩니다.",
     "store_summaries": {
-      "신세계천안아산": "Roll‑cake demand is low; cuts are only half the usual amount.",
-      "신세계경기점": "Continued low sales, roll‑cake loss continues; consider reducing order.",
-      "현대신촌": "Basic roll sales weak, focus on cheaper baked goods.",
-      "롯데 동탄점": "Sales are very poor, causing concern.",
-      "카페 몽슈슈_엘포트점": "Few beverage customers; roll‑cake sells in small amounts but whole‑cake remains weak, creating ordering dilemma.",
-      "현대판교점": "Morning traffic decent but afternoon drops sharply; baked‑goods sales low.",
-      "현대충청점": "Steady lunch sales; competitor targeting exam‑takers; Madmoa‑gel 8‑pack out of stock.",
-      "롯데 건대점": "Light snack items like roll‑cookie S and cookie‑sand XS are selling well.",
-      "카페 몽슈슈_정자점": "Colder weather boosts latte sales and roll‑cuts, but whole‑cake still lagging.",
-      "롯데본점": "Roll‑cake sales sluggish; baked goods steady.",
-      "롯데부산본점": "Daily sales 528,800 KRW; hygiene inspection and extensive renovation causing dust and disruption.",
-      "롯데 인천점": "Very quiet department store; opening delayed, sales remained low throughout the day.",
-      "신세계 대구점": "Low foot traffic but baked‑goods purchases helped sales.",
-      "현대중동점": "After previous loss, focus on defense; fell short of target but petite 4‑pack sold 5 units.",
-      "신세계의정부": "Overall quiet day, no special issues.",
-      "카페 몽슈슈_GFC": "Take‑away drink orders slightly up, indicating competitive edge."
+      "신세계천안아산": "롤케이크 주문량이 평소 절반 수준으로 감소.",
+      "신세계경기점": "백화점 유동인구 감소로 롤케이크 매출 저조, 발주량 감소 필요.",
+      "현대신촌": "기본롤 판매 부진, 저가 구움과자 위주 판매.",
+      "롯데동탄점": "매출 전반 저조.",
+      "카페 몽슈슈_엘포트점": "롤케이크 소량 판매, 홀케이크 지속 부진, 발주 고민.",
+      "현대판교점": "오전 고객 유입 있었으나 오후 급감, 구움과자 매출 저조.",
+      "현대충청점": "점심 이후 골고루 판매, 마드모아젤 8개입 품절 지속.",
+      "롯데건대점": "가벼운 롤쿠키S·쿠키샌드XS 판매 호조.",
+      "카페 몽슈슈_정자점": "라떼 음료 판매 증가, 롤컷 상승하지만 홀케이크 부진.",
+      "롯데본점": "롤케이크 부진, 구움과자 꾸준히 판매.",
+      "롯데부산본점": "당일 매출 528,800원, 위생검열 및 공사로 먼지 문제 발생.",
+      "롯데인천점": "백화점 한산, 매출 저조 지속.",
+      "신세계대구점": "구움과자 구매 증가로 매출 도움.",
+      "현대중동점": "로스 여파 최소화 시도했으나 목표 미달, 쁘띠4개입·5개 판매.",
+      "신세계의정부": "전반 한산, 특이사항 없음.",
+      "카페 몽슈슈_GFC": "포장 음료 고객 소폭 증가, 경쟁력 인정."
     },
     "tasks": [
       {
         "priority": "즉시처리",
         "store": "전체",
-        "action": "Reduce roll‑cake order quantities across all stores until demand improves."
+        "action": "롤케이크 발주량을 현재 판매 추세에 맞춰 30-50% 감축하고 재고 모니터링."
       },
       {
         "priority": "이번주",
         "store": "현대충청점",
-        "action": "Check supplier lead‑time for Madmoa‑gel 8‑pack and place urgent replenishment request."
+        "action": "마드모아젤 8개입 재입고 일정 확인 및 대체 상품 제안."
       },
       {
         "priority": "이번주",
         "store": "롯데부산본점",
-        "action": "Coordinate with facilities to improve cleaning after renovation and ensure hygiene compliance."
-      },
-      {
-        "priority": "모니터링",
-        "store": "전체",
-        "action": "Track latte and beverage sales as a potential offset for weak cake sales and adjust promotions accordingly."
+        "action": "공사 현장 먼지 관리 방안 마련 및 위생점검 강화."
       },
       {
         "priority": "모니터링",
         "store": "카페 몽슈슈_엘포트점",
-        "action": "Test a small‑batch promotion for whole‑cake to gauge demand before larger orders."
+        "action": "홀케이크 판매 촉진 프로모션 기획."
+      },
+      {
+        "priority": "모니터링",
+        "store": "롯데건대점",
+        "action": "롤쿠키S·쿠키샌드XS 판매 데이터 분석 후 추가 프로모션 검토."
       }
     ],
     "highlights": [
-      "전반적인 롤케이크 판매 부진",
-      "구움과자 판매는 비교적 안정적",
-      "몇몇 매장에서 재고·발주 이슈 발생",
-      "롯데부산본점 공사로 인한 청결·위생 문제"
+      "롤케이크 판매 전반 부진",
+      "쿠키·구움과자 판매는 비교적 안정적",
+      "부산 매장 공사로 인한 위생·청결 이슈",
+      "마드모아젤 8개입 품절 지속"
     ]
   },
   "2026-10-15": {
-    "overall_summary": "전반적으로 대부분 매장에서 롤케이크·도지마롤 등 주요 제품 판매가 부진하고, 부자재·보냉가방 부족이 문제이며, 일부 매장은 쿠키·음료 판매는 양호하지만 재고 관리가 필요합니다.",
+    "overall_summary": "전반적으로 도지마롤과 롤케익 판매가 부진하고 일부 매장은 필수 부자재 부족으로 어려움을 겪고 있으나, 일부 매장은 케이크·쿠키 판매가 양호함.",
     "store_summaries": {
-      "롯데동탄점": "특이사항 없습니다.",
-      "신세계센텀점": "보냉가방 부족으로 판매 기회 상실, 부자재 품절이 지속되어 빠른 입고 필요, 수능일 관련 합격 띠지·스티커 문의 증가.",
-      "현대미아점": "전체적으로 판매가 매우 부진한 하루였습니다.",
-      "카페 몽슈슈_엘포트점": "오전 케이크 판매는 좋았으나 점심 이후 매출이 저조, 저녁 롤케이크는 판매됐지만 도지마롤은 부진.",
-      "카페 몽슈슈_정자점": "판매는 높지만 신규 파르페 반응이 미미하고 롤케이크 판매가 저조.",
-      "롯데본점": "목요일 기대치에 못 미쳐 롤케익 판매가 부진.",
-      "AK분당": "명절 이후 판매가 어려워 도지마롤 판매가 크게 감소.",
-      "카페 몽슈슈_GFC": "점심 피크 타임 음료 주문 급증, 스팀칠 증가, 우유 발주량 증대 필요, 쿠키 세트 판매 호조하지만 홀케이크 재고 과다."
+      "롯데 동탄점": "특이사항 없음, 정상 영업.",
+      "신세계센텀점": "냉장 가방 부족으로 도지마롤 판매 기회 상실, 시험용 띠지·스티커 문의 증가.",
+      "현대미아점": "전체적으로 판매가 크게 부진.",
+      "카페 몽슈슈_엘포트점": "아침 케이크 판매는 좋았으나 점심 판매 저조, 저녁 롤케익은 판매됐지만 도지마롤은 부진.",
+      "카페 몽슈슈_정자점": "전체 매출은 높지만 신규 파르페 반응 미미, 롤케익 판매 감소.",
+      "롯데본점": "목요일 매출 목표 미달, 롤케익 판매 부진.",
+      "AK분당": "명절 이후 판매 어려움, 도지마롤 판매 급감.",
+      "카페 몽슈슈_GFC": "점심 피크 타임 바쁘지만 우유 발주량 부족, 쿠키 세트는 잘 팔리나 홀케익 재고 과다."
     },
     "tasks": [
       {
         "priority": "즉시처리",
         "store": "신세계센텀점",
-        "action": "보냉가방 및 필수 부자재를 긴급 발주하여 오늘 중 입고"
+        "action": "냉장 가방 재고 확인 및 긴급 입고 요청"
+      },
+      {
+        "priority": "즉시처리",
+        "store": "전체",
+        "action": "도지마롤 판매 부진 원인 분석 및 프로모션 기획"
       },
       {
         "priority": "이번주",
-        "store": "현대미아점",
-        "action": "롤케이크·도지마롤 프로모션을 기획하고 재고 조정"
-      },
-      {
-        "priority": "이번주",
-        "store": "롯데본점",
-        "action": "롤케익 할인 이벤트 진행"
+        "store": "카페 몽슈슈_GFC",
+        "action": "우유 발주량 20% 증량 및 재고 관리"
       },
       {
         "priority": "이번주",
         "store": "AK분당",
-        "action": "도지마롤 판매 촉진을 위한 패키지 구성 및 마케팅"
+        "action": "도지마롤 재고 보충 및 대체 메뉴 홍보"
       },
       {
         "priority": "모니터링",
-        "store": "카페 몽슈슈_GFC",
-        "action": "우유 발주량과 홀케이크 재고를 매일 체크"
+        "store": "전체",
+        "action": "롤케익 판매 추이 일일 체크"
       }
     ],
     "highlights": [
-      "보냉가방 품절로 인한 판매 기회 손실",
-      "도지마롤 전 매장 판매 부진",
-      "우유 발주량 증가 필요",
-      "쿠키 세트 판매 호조"
+      "도지마롤 및 롤케익 판매 전반적인 부진",
+      "냉장 가방 등 필수 부자재 재고 부족"
     ]
   }
 }
