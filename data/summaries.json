@@ -7486,107 +7486,95 @@
     ]
   },
   "2026-10-25": {
-    "overall_summary": "다수 매장이 전반적으로 골고루 판매했으나 과일롤·요거베리롤·도지마롤 등 일부 제품은 저조했으며, 고객 피드백과 포장 문제 등이 확인되었습니다.",
+    "overall_summary": "Most stores reported steady sales with a few product-specific issues; cake sales were strong at several locations while fruit rolls and doji ma rolls lagged in others.",
     "store_summaries": {
-      "현대프리미엄아울렛 스페이스원": "콘서트로 고객 유입이 많아 롤컷·음료롤은 잘 팔렸지만 케이크 판매는 다소 저조했습니다.",
-      "현대판교점": "방문객이 꾸준하고 구움과자·아소트세트가 인기였으나 휘낭시에 세트는 인근 매장 영향으로 부진했습니다.",
-      "신세계센텀점": "대부분 제품이 골고루 팔렸으나 무화과 케이크 불만, 대형 포장 박스 부피 문제, 파르페 가격 상승에 대한 우려가 있었습니다.",
-      "롯데 건대점": "후르츠롤 판매가 저조하고 쁘띠도지마롤은 잘 팔렸습니다.",
-      "현대미아점": "요거베리롤을 제외한 모든 제품이 고르게 판매되었습니다.",
-      "카페 몽슈슈 엘포트점": "아침에 음료 고객이 많았고, 저녁에 컷과 함께 케이크·롤케이크가 소량 판매됐으며 도지마롤이 회복되었습니다.",
-      "AK수원": "전체 실구매 고객이 적어 매출이 부진하고 특히 도지마롤이 저조했습니다.",
-      "카페 몽슈슈 정자점": "특이사항이 없었습니다.",
-      "신세계의정부점": "일요일에 고객이 많아 전 제품이 골고루 잘 팔렸고, 케이크가 조기에 매진되었습니다."
+      "현대프리미엄아울렛 스페이스원": "Concert attracted many customers; roll cuts and drinks sold well but cake sales were slightly down.",
+      "현대판교점": "Steady foot traffic; baked goods performed well, but whine set and asote set had mixed results.",
+      "신세계센텀점": "All items sold evenly except petite dogeema roll; negative feedback on fig cake and packaging size concerns.",
+      "롯데-건대스타시티점": "Fruit roll sales weak, petite dogeema roll strong.",
+      "현대미아점": "All products sold evenly except yogurberry roll noted as exception.",
+      "카페 몽슈슈_엘포트점": "Morning beverage traffic high; evening saw roll and cake combos; doji ma roll rebounded.",
+      "AK수원": "Low foot traffic overall; doji ma roll sales especially weak.",
+      "카페 몽슈슈_정자점": "No notable issues.",
+      "신세계의정부": "Very high sales; all products sold out quickly, especially petite deco."
     },
     "tasks": [
       {
         "priority": "즉시처리",
         "store": "신세계센텀점",
-        "action": "무화과 케이크 레시피를 검토하고 고객 불만을 해소할 대안을 마련한다."
-      },
-      {
-        "priority": "즉시처리",
-        "store": "신세계센텀점",
-        "action": "대형 포장 박스 설계 변경으로 부피와 파손 위험을 최소화한다."
+        "action": "Investigate fig cake taste complaint and consider recipe adjustment; review large‑box packaging to prevent product shift."
       },
       {
         "priority": "이번주",
-        "store": "롯데 건대점",
-        "action": "후르츠롤 프로모션(시식·할인)으로 판매 촉진한다."
+        "store": "롯데-건대스타시티점",
+        "action": "Promote fruit rolls with a limited‑time discount to boost sales."
       },
       {
         "priority": "이번주",
         "store": "AK수원",
-        "action": "도지마롤 할인 및 세트 구성으로 매출 회복을 시도한다."
-      },
-      {
-        "priority": "이번주",
-        "store": "현대미아점",
-        "action": "요거베리롤을 강조한 마케팅 및 시식 이벤트를 진행한다."
-      },
-      {
-        "priority": "이번주",
-        "store": "현대판교점",
-        "action": "휘낭시에 세트 재고 조정 및 인근 매장 차별화 전략을 수립한다."
+        "action": "Increase local marketing and suggest bundle offers to improve foot traffic and doji ma roll sales."
       },
       {
         "priority": "모니터링",
-        "store": "현대프리미엄아울렛 스페이스원",
-        "action": "콘서트 효과를 분석해 향후 이벤트 마케팅에 활용한다."
+        "store": "전체",
+        "action": "Track cake sales trends at 현대프리미엄아울렛 스페이스원 and 현대판교점 for any further decline."
       }
     ],
     "highlights": [
-      "콘서트가 매장 방문을 크게 늘렸다",
-      "무화과 케이크에 대한 고객 불만이 발생했다",
-      "도지마롤이 여러 매장에서 저조한 판매를 보였다"
+      "Concert at 현대프리미엄아울렛 스페이스원 boosted traffic",
+      "Fig cake received negative feedback at 신세계센텀점",
+      "Fruit roll underperforming at 롯데-건대스타시티점",
+      "Packaging size issue noted at 신세계센텀점"
     ]
   },
   "2026-10-26": {
-    "overall_summary": "대부분 매장이 수능 선물 수요 증가와 날씨·인구 감소로 매출 변동을 보였으며, 일부 매장은 팝업 성공과 특정 제품 부족 문제를 겪고 있습니다.",
+    "overall_summary": "대부분 매장이 월요일이라 방문객이 적었지만, 수능 선물용 구움과자와 롤케이크 판매가 일부 매출을 보조했습니다. 일부 매장은 재고 부족과 특정 제품 부진, 팝업 매장의 인기 등 이슈가 있습니다.",
     "store_summaries": {
-      "신세계경기점": "조용한 월요일에 구움과자세트 판매가 매출을 일부 회복했으나 홀케이크 부진.",
-      "카페 몽슈슈_엘포트점": "선물 롤케이크와 직장인 음료 판매가 활발했으며 단체 고객도 방문.",
-      "현대천호": "수능 선물 구움과자 수요 증가, 마드모아젤 8개입 재고 부족.",
-      "현대미아점": "특이사항 없음.",
-      "신세계센텀점": "유동 인구 적음에도 골고루 판매, 쁘띠도지마롤 부진 지속.",
-      "현대중동점": "쏘쏘사라다 팝업 매장에 긴 대기줄, 입점 소문.",
-      "롯데본점": "주말 매출 저조, 오후 구움과자 판매로 회복.",
-      "롯데부산본점": "당일 매출 455600원, 방문객 감소와 공사 구간 개방 기대.",
-      "현대목동점": "수능 띠지 수요 높음, 재고 부족으로 타 매장 이동, 내일 입고 예정."
+      "신세계경기점": "조용한 월요일에 구움과자 세트가 매출에 기여했으나 홀케이크는 부진했습니다.",
+      "카페 몽슈슈_엘포트점": "선물용 롤케이크와 직장인 음료 판매가 활발했으며 단체 고객도 방문했습니다.",
+      "현대천호": "수능 선물 구움과자 수요 증가, 마드모아젤 8개입 재고 부족으로 품절 상황입니다.",
+      "현대미아점": "특이사항 없이 평범한 영업을 보였습니다.",
+      "신세계센텀점": "유동 인구가 적었음에도 골고루 판매됐지만 쁘띠도지마롤이 지속 부진합니다.",
+      "현대중동점": "쏘쏘사라다 팝업 매장이 줄이 길게 서며 인기를 끌어 입점 소문이 있습니다.",
+      "롯데본점": "주말 매출 저조했으나 오후 구움과자 판매로 매출을 회복했습니다.",
+      "롯데부산본점": "날씨 영향으로 방문객이 적었고, 공사 구간 오픈을 기대하고 있습니다.",
+      "현대목동점": "수능 띠지 수요가 높아 재입고가 필요했으며, 관련 제품을 충분히 준비해야 합니다."
     },
     "tasks": [
       {
         "priority": "즉시처리",
         "store": "현대천호",
-        "action": "마드모아젤 8개입 추가 발주 및 재고 보충"
+        "action": "마드모아젤 8개입 재고를 즉시 보충하고 공급망을 점검한다"
       },
       {
         "priority": "이번주",
         "store": "신세계센텀점",
-        "action": "쁘띠도지마롤 프로모션 및 판매 원인 분석"
-      },
-      {
-        "priority": "모니터링",
-        "store": "현대중동점",
-        "action": "쏘쏘사라다 팝업 매장 입점 가능성 검토"
+        "action": "쁘띠도지마롤 판매 부진 원인을 분석하고 프로모션을 기획한다"
       },
       {
         "priority": "이번주",
         "store": "전체",
-        "action": "수능 선물 구움과자 재고 확대 및 진열 강화"
+        "action": "수능 선물용 구움과자 재고를 전 매장에 충분히 배분한다"
       },
       {
         "priority": "모니터링",
+        "store": "현대중동점",
+        "action": "팝업 매장 고객 흐름을 추적하고 영구 입점 가능성을 검토한다"
+      },
+      {
+        "priority": "이번주",
         "store": "롯데본점",
-        "action": "주말 매출 회복을 위한 마케팅 방안 모색"
+        "action": "저조한 매출 시간대에 대한 마케팅 및 프로모션 방안을 마련한다"
+      },
+      {
+        "priority": "모니터링",
+        "store": "롯데부산본점",
+        "action": "날씨에 따른 방문객 변동을 모니터링하고 실내 프로모션을 강화한다"
       }
     ],
     "highlights": [
       "수능 선물 구움과자 수요 급증",
-      "마드모아젤 재고 부족",
-      "쏘쏘사라다 팝업 매장 인기",
-      "쁘띠도지마롤 지속 부진",
-      "롯데부산본점 매출 455600원"
+      "현대중동점 팝업 매장의 높은 고객 관심"
     ]
   }
 }
