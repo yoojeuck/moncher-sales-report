@@ -36,6 +36,9 @@ jobs:
       - name: 의존성 설치
         run: pip install -r scraper/requirements.txt
 
+      - name: 판매일보 날짜·한국어 요약 시험
+        run: python -m unittest discover -s scraper -p 'test_*.py'
+
       - name: AI 요약 보충 실행
         env:
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
