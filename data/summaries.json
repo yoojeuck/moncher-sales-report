@@ -7486,95 +7486,90 @@
     ]
   },
   "2026-10-25": {
-    "overall_summary": "Most stores reported steady sales with a few product-specific issues; cake sales were strong at several locations while fruit rolls and doji ma rolls lagged in others.",
+    "overall_summary": "대부분 매장에서 제품이 골고루 판매됐으나, 일부 매장은 특정 케이크·롤 판매가 저조하고, 신세계센텀점은 무화과 케이크 불만과 포장 문제를 제기했습니다.",
     "store_summaries": {
-      "현대프리미엄아울렛 스페이스원": "Concert attracted many customers; roll cuts and drinks sold well but cake sales were slightly down.",
-      "현대판교점": "Steady foot traffic; baked goods performed well, but whine set and asote set had mixed results.",
-      "신세계센텀점": "All items sold evenly except petite dogeema roll; negative feedback on fig cake and packaging size concerns.",
-      "롯데-건대스타시티점": "Fruit roll sales weak, petite dogeema roll strong.",
-      "현대미아점": "All products sold evenly except yogurberry roll noted as exception.",
-      "카페 몽슈슈_엘포트점": "Morning beverage traffic high; evening saw roll and cake combos; doji ma roll rebounded.",
-      "AK수원": "Low foot traffic overall; doji ma roll sales especially weak.",
-      "카페 몽슈슈_정자점": "No notable issues.",
-      "신세계의정부": "Very high sales; all products sold out quickly, especially petite deco."
+      "현대프리미엄아울렛 스페이스원": "콘서트로 고객이 많이 몰렸고 롤컷·음료 롤홀 판매는 좋았지만 케이크 판매는 다소 저조했습니다.",
+      "현대판교점": "방문객이 꾸준하고 구움과자·아소트세트가 인기였으며 휘낭시에 세트는 인근 매장 영향으로 부진했습니다.",
+      "신세계센텀점": "전체 제품이 고르게 판매됐으나 무화과 케이크 불만, 파르페 부피·가격 우려, 대형 포장 손상 문제가 있습니다.",
+      "롯데 건대점": "후르츠롤 판매가 저조하고 쁘띠도지마롤은 잘 팔렸습니다.",
+      "현대미아점": "요거베리롤 제외 모든 제품이 골고루 판매되었습니다.",
+      "카페 몽슈슈 엘포트점": "초기 음료 주문이 많고 저녁에 도지마롤 판매가 급증했습니다.",
+      "AK수원": "전체 실구매 고객이 적고 도지마롤 판매가 저조해 어려움을 겪고 있습니다.",
+      "카페 몽슈슈 정자점": "특이사항이 없습니다.",
+      "신세계의정부점": "전체 매출이 활발하고 전 제품이 골고루 잘 팔렸으며, 홀케이크와 쁘띠데코가 조기 매진되었습니다."
     },
     "tasks": [
       {
         "priority": "즉시처리",
         "store": "신세계센텀점",
-        "action": "Investigate fig cake taste complaint and consider recipe adjustment; review large‑box packaging to prevent product shift."
+        "action": "무화과 케이크 판매 중단 및 고객 피드백 반영, 대형 포장 개선 방안 검토"
       },
       {
         "priority": "이번주",
-        "store": "롯데-건대스타시티점",
-        "action": "Promote fruit rolls with a limited‑time discount to boost sales."
+        "store": "롯데 건대점",
+        "action": "후르츠롤 프로모션 및 시식 행사 진행"
       },
       {
         "priority": "이번주",
         "store": "AK수원",
-        "action": "Increase local marketing and suggest bundle offers to improve foot traffic and doji ma roll sales."
+        "action": "도지마롤 할인 및 패키지 제안으로 판매 촉진"
       },
       {
         "priority": "모니터링",
-        "store": "전체",
-        "action": "Track cake sales trends at 현대프리미엄아울렛 스페이스원 and 현대판교점 for any further decline."
+        "store": "현대프리미엄아울렛 스페이스원",
+        "action": "콘서트 이후 케이크 판매 추이 관찰"
       }
     ],
     "highlights": [
-      "Concert at 현대프리미엄아울렛 스페이스원 boosted traffic",
-      "Fig cake received negative feedback at 신세계센텀점",
-      "Fruit roll underperforming at 롯데-건대스타시티점",
-      "Packaging size issue noted at 신세계센텀점"
+      "콘서트로 인한 고객 증가와 케이크 판매 저조",
+      "무화과 케이크에 대한 고객 불만 및 포장 손상 이슈",
+      "도지마롤 판매 저조가 여러 매장에서 공통적으로 나타남"
     ]
   },
   "2026-10-26": {
-    "overall_summary": "대부분 매장이 월요일이라 방문객이 적었지만, 수능 선물용 구움과자와 롤케이크 판매가 일부 매출을 보조했습니다. 일부 매장은 재고 부족과 특정 제품 부진, 팝업 매장의 인기 등 이슈가 있습니다.",
+    "overall_summary": "대부분 매장이 월요일에 방문객이 적었지만 수능 선물용 구움과자 수요가 상승해 매출을 일부 회복했으며, 일부 매장은 재고 부족과 판매 부진 이슈가 존재합니다.",
     "store_summaries": {
-      "신세계경기점": "조용한 월요일에 구움과자 세트가 매출에 기여했으나 홀케이크는 부진했습니다.",
-      "카페 몽슈슈_엘포트점": "선물용 롤케이크와 직장인 음료 판매가 활발했으며 단체 고객도 방문했습니다.",
-      "현대천호": "수능 선물 구움과자 수요 증가, 마드모아젤 8개입 재고 부족으로 품절 상황입니다.",
-      "현대미아점": "특이사항 없이 평범한 영업을 보였습니다.",
-      "신세계센텀점": "유동 인구가 적었음에도 골고루 판매됐지만 쁘띠도지마롤이 지속 부진합니다.",
-      "현대중동점": "쏘쏘사라다 팝업 매장이 줄이 길게 서며 인기를 끌어 입점 소문이 있습니다.",
-      "롯데본점": "주말 매출 저조했으나 오후 구움과자 판매로 매출을 회복했습니다.",
-      "롯데부산본점": "날씨 영향으로 방문객이 적었고, 공사 구간 오픈을 기대하고 있습니다.",
-      "현대목동점": "수능 띠지 수요가 높아 재입고가 필요했으며, 관련 제품을 충분히 준비해야 합니다."
+      "신세계경기점": "매우 조용한 월요일에 전체 매출이 감소했으며, 수능 선물 구움과자 세트 판매가 일부 매출을 보조했지만 홀케이크 미판매로 손실 발생.",
+      "카페 몽슈슈_엘포트점": "선물용 롤케이크와 직장인 음료 판매가 활발했으며, 단체 고객 방문으로 음료 매출이 증가.",
+      "현대천호": "수능 선물 구움과자 수요 증가, 마드모아젤 8개입이 꾸준히 팔리지만 발주량보다 적게 입고돼 품절.",
+      "현대미아점": "특이사항 없음.",
+      "신세계센텀점": "유동 인구는 적었지만 제품이 골고루 판매, petite 도지마롤 판매 부진 지속, 수능 선물 구움과자 수요 증가.",
+      "현대중동점": "쏘쏘사라다 팝업 매장이 매일 긴 줄을 형성, 정식 입점 소문이 돌고 있음.",
+      "롯데본점": "주말 매출 저조, 오후 구움과자 판매가 매출을 보충.",
+      "롯데부산본점": "당일 매출 455,600원, 날씨 영향으로 방문객 감소, 공사 구간 조속히 오픈 필요.",
+      "현대목동점": "수능 띠지 수요 급증, 일부 고객이 경쟁점으로 이동, 내일 입고 예정이라 재고 확보 필요."
     },
     "tasks": [
       {
         "priority": "즉시처리",
         "store": "현대천호",
-        "action": "마드모아젤 8개입 재고를 즉시 보충하고 공급망을 점검한다"
+        "action": "마드모아젤 8개입 재고를 즉시 보충하고 발주량을 조정"
       },
       {
         "priority": "이번주",
         "store": "신세계센텀점",
-        "action": "쁘띠도지마롤 판매 부진 원인을 분석하고 프로모션을 기획한다"
+        "action": "petite 도지마롤 판매 부진 원인 분석 및 프로모션 기획"
       },
       {
         "priority": "이번주",
-        "store": "전체",
-        "action": "수능 선물용 구움과자 재고를 전 매장에 충분히 배분한다"
+        "store": "현대중동점",
+        "action": "쏘쏘사라다 팝업 매장의 정식 입점 가능성 검토 및 계약 준비"
       },
       {
         "priority": "모니터링",
-        "store": "현대중동점",
-        "action": "팝업 매장 고객 흐름을 추적하고 영구 입점 가능성을 검토한다"
-      },
-      {
-        "priority": "이번주",
-        "store": "롯데본점",
-        "action": "저조한 매출 시간대에 대한 마케팅 및 프로모션 방안을 마련한다"
+        "store": "전체",
+        "action": "수능 선물 구움과자 수요 추이와 재고 상황을 지속적으로 모니터링"
       },
       {
         "priority": "모니터링",
         "store": "롯데부산본점",
-        "action": "날씨에 따른 방문객 변동을 모니터링하고 실내 프로모션을 강화한다"
+        "action": "날씨 및 공사 진행 상황에 따른 방문객 변동 파악"
       }
     ],
     "highlights": [
       "수능 선물 구움과자 수요 급증",
-      "현대중동점 팝업 매장의 높은 고객 관심"
+      "쏘쏘사라다 팝업 매장의 높은 인기",
+      "몇몇 매장의 재고 부족 문제"
     ]
   }
 }
