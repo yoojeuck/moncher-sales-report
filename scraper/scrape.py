@@ -17,10 +17,10 @@ COMPANY_ID     = "5000001396"
 BOARD_ID       = "17422"
 LOGIN_ID       = os.environ.get("DAOU_ID", "juyoo")
 PASSWORD       = os.environ.get("DAOU_PW", "")
-GROQ_API_KEY  = os.environ.get("GROQ_API_KEY", "")
-# llama-3.3-70b-versatile 은 2026-08-16 무료·개발자 티어에서 종료됐다.
-# 종료 당일부터 모든 요약이 조용히 실패해 summaries.json 이 8/16 에서 멈췄다.
-GROQ_MODEL    = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
+DEEPSEEK_MODEL   = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+GROQ_API_KEY     = os.environ.get("GROQ_API_KEY", "")
+GROQ_MODEL       = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
 KST            = timezone(timedelta(hours=9))
 
 _base        = os.path.join(os.path.dirname(__file__), "..")
@@ -266,14 +266,33 @@ def validate_summary(summary, posts=None) -> bool:
 
 
 def generate_summary(posts: list[dict], target_date: str) -> dict:
-    """Groq API로 AI 요약 생성.
+    """DeepSeek API(기본) 또는 Groq API로 AI 요약 생성.
     반환값: dict = 성공, {} = 기타오류, None = 일일 한도 소진
     """
-    if not GROQ_API_KEY:
-        print("[!] GROQ_API_KEY 미설정 — 요약 건너뜁니다.")
+    deepseek_key = DEEPSEEK_API_KEY
+    groq_key = GROQ_API_KEY
+
+    # GROQ_API_KEY에 DeepSeek 키(sk-...)가 등록된 경우 자동 호환
+    if not deepseek_key and groq_key:
+        if groq_key.startswith("sk-") or not groq_key.startswith("gsk_"):
+            deepseek_key = groq_key
+            groq_key = ""
+
+    api_key = deepseek_key or groq_key
+    if not api_key:
+        print("[!] DEEPSEEK_API_KEY 미설정 — 요약 건너뜁니다.")
         return {}
     if not posts:
         return {}
+
+    if deepseek_key:
+        api_url = "https://api.deepseek.com/chat/completions"
+        model_name = DEEPSEEK_MODEL
+        provider = "DeepSeek"
+    else:
+        api_url = "https://api.groq.com/openai/v1/chat/completions"
+        model_name = GROQ_MODEL
+        provider = "Groq"
 
     posts_text = "\n\n".join(
         f"[{p['store']}]\n{p['content']}"
@@ -310,13 +329,13 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
     try:
         for attempt in range(2):
             resp = requests.post(
-                "https://api.groq.com/openai/v1/chat/completions",
+                api_url,
                 headers={
                     "Content-Type": "application/json",
-                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Authorization": f"Bearer {api_key}",
                 },
                 json={
-                    "model": GROQ_MODEL,
+                    "model": model_name,
                     "messages": list(messages),
                     "temperature": 0.3,
                     "response_format": {"type": "json_object"},
@@ -324,13 +343,16 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
                 timeout=60
             )
             if resp.status_code == 429:
-                print("[!] Groq 일일 한도 소진 — 내일 이어서 실행됩니다.")
+                print(f"[!] {provider} 일일 한도 소진 — 내일 이어서 실행됩니다.")
+                return None
+            if resp.status_code == 402:
+                print(f"[!] {provider} 잔액 부족 (402 Payment Required)")
                 return None
             resp.raise_for_status()
             text = resp.json()["choices"][0]["message"]["content"]
             result = json.loads(text)
             if validate_summary(result, posts):
-                print("[✓] 한국어 AI 요약 생성·검증 완료")
+                print(f"[✓] {provider} 한국어 AI 요약 생성·검증 완료")
                 return result
             print(f"[!] {target_date} 요약 언어·형식 검증 실패 ({attempt + 1}/2)")
             if attempt == 0:
@@ -341,8 +363,8 @@ def generate_summary(posts: list[dict], target_date: str) -> dict:
         print(f"[!] {target_date} 요약 저장 생략 — 기존 요약을 보존합니다.")
         return {}
     except requests.exceptions.HTTPError as e:
-        if e.response.status_code == 429:
-            print("[!] Groq 일일 한도 소진 — 내일 이어서 실행됩니다.")
+        if e.response.status_code in (429, 402):
+            print(f"[!] {provider} 한도/잔액 이슈 ({e.response.status_code}) — 중단합니다.")
             return None
         print(f"[!] AI 요약 실패: {e}")
         return {}

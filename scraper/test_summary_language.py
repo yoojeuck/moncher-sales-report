@@ -69,7 +69,8 @@ class SummaryLanguageTests(unittest.TestCase):
     def setUp(self):
         # 개별 요청 모킹을 빠뜨린 시험도 실제 HTTP로 빠져나가지 않게 한다.
         for guard in (
-            patch.object(scrape, "GROQ_API_KEY", "SYNTHETIC_TEST_KEY"),
+            patch.object(scrape, "DEEPSEEK_API_KEY", "SYNTHETIC_TEST_KEY"),
+            patch.object(scrape, "GROQ_API_KEY", ""),
             patch("builtins.print"),
             patch.object(
                 scrape.requests.sessions.Session,
@@ -172,6 +173,8 @@ class SummaryLanguageTests(unittest.TestCase):
         self.assertEqual(result, value)
         self.assertEqual(post.call_count, 1)
         self.assertEqual(posts, POSTS)
+        self.assertEqual(post.call_args.args[0], "https://api.deepseek.com/chat/completions")
+        self.assertEqual(post.call_args.kwargs["json"]["model"], "deepseek-chat")
         messages = post.call_args.kwargs["json"]["messages"]
         self.assertIn("한국어", json.dumps(messages, ensure_ascii=False))
 
@@ -240,10 +243,20 @@ class SummaryLanguageTests(unittest.TestCase):
 
     def test_missing_api_key_and_empty_posts_do_not_call_http(self):
         with patch.object(scrape.requests, "post") as post:
-            with patch.object(scrape, "GROQ_API_KEY", ""):
+            with patch.object(scrape, "DEEPSEEK_API_KEY", ""), patch.object(scrape, "GROQ_API_KEY", ""):
                 self.assertEqual(scrape.generate_summary(POSTS, TARGET_DATE), {})
             self.assertEqual(scrape.generate_summary([], TARGET_DATE), {})
         post.assert_not_called()
+
+    def test_fallback_to_groq_when_deepseek_key_missing(self):
+        value = korean_summary()
+        posts = copy.deepcopy(POSTS)
+        with patch.object(scrape, "DEEPSEEK_API_KEY", ""), patch.object(scrape, "GROQ_API_KEY", "gsk_SYNTHETIC_GROQ_KEY"):
+            with patch.object(scrape.requests, "post", return_value=response(value)) as post:
+                result = scrape.generate_summary(posts, TARGET_DATE)
+        self.assertEqual(result, value)
+        self.assertEqual(post.call_args.args[0], "https://api.groq.com/openai/v1/chat/completions")
+        self.assertEqual(post.call_args.kwargs["json"]["model"], "openai/gpt-oss-120b")
 
     def test_invalid_summary_never_overwrites_existing_file(self):
         with tempfile.TemporaryDirectory(prefix="sales-language-test-") as directory:
