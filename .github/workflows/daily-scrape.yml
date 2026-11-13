@@ -29,12 +29,20 @@ on:
 permissions:
   contents: write
 
+# 원문·요약 게시를 순서대로 처리하고 대기 중인 수집을 취소하지 않습니다.
+concurrency:
+  group: sales-data-main
+  cancel-in-progress: false
+  queue: max
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
       - name: 코드 체크아웃
         uses: actions/checkout@v5
+        with:
+          ref: main
 
       - name: Python 설정
         uses: actions/setup-python@v6
